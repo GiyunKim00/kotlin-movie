@@ -1,5 +1,7 @@
 package domain.account
 
-class Account(val point: Point = Point(2000)) {
-
+class Account(var point: Point = Point(2000)) {
+    fun useMyPoint(usingPoints: Int) {
+        point = point.usePoint(usingPoints)
+    }
 }

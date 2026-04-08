@@ -1,13 +1,13 @@
 package domain.payment
 
-import java.time.LocalDateTime
+import domain.screening.ScreeningStartTime
 
 class DiscountPolicy {
 
-    fun discount(date: LocalDateTime, money: Int): Int {
+    fun discount(date: ScreeningStartTime, money: Int): Int {
         return discountByTimeSale(
             date,
-            discountByMovieDay(date.dayOfMonth, money)
+            discountByMovieDay(date.value.dayOfMonth, money)
         )
     }
 
@@ -18,8 +18,8 @@ class DiscountPolicy {
         return money
     }
 
-    fun discountByTimeSale(time: LocalDateTime, money: Int): Int {
-        if (time.hour !in 11..19) {
+    fun discountByTimeSale(time: ScreeningStartTime, money: Int): Int {
+        if (time.value.hour !in 11..19) {
             return money - 2000
         }
         return money

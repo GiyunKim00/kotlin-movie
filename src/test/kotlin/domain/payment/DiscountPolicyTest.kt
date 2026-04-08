@@ -1,5 +1,6 @@
 package domain.payment
 
+import domain.screening.ScreeningStartTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -59,9 +60,9 @@ class DiscountPolicyTest {
 
     @Test
     fun `11시 이전 또는 20시 이후의 영화는 2000원 할인된다`() {
-        val movieHour = LocalDateTime.of(2026, 5, 10, 10, 0)
-        val movieHour2 = LocalDateTime.of(2026, 5, 10, 20, 0)
-        val movieHour3 = LocalDateTime.of(2026, 5, 10, 10, 59)
+        val movieHour = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 10, 0))
+        val movieHour2 = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 20, 0))
+        val movieHour3 = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 10, 59))
 
         val discountPolicy = DiscountPolicy()
         val totalAmount = 10000
@@ -83,8 +84,8 @@ class DiscountPolicyTest {
 
     @Test
     fun `11시에서 20시 사이의 영화는 할인되지 않는다`() {
-        val movieHour = LocalDateTime.of(2026, 5, 10, 11, 0)
-        val movieHour2 = LocalDateTime.of(2026, 5, 10, 19, 59)
+        val movieHour1 = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 11, 0))
+        val movieHour2 = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 19, 59))
 
         val discountPolicy = DiscountPolicy()
         val totalAmount = 10000
@@ -92,7 +93,7 @@ class DiscountPolicyTest {
 
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour1, totalAmount)
         )
         assertEquals(
             expectAmount,
@@ -102,7 +103,7 @@ class DiscountPolicyTest {
 
     @Test
     fun `무비데이 할인과 조조 심야 할인이 동시 적용될 시 무비데이 할인이 먼저 적용된다`() {
-        val movieHour = LocalDateTime.of(2026, 5, 10, 9, 0)
+        val movieHour = ScreeningStartTime(LocalDateTime.of(2026, 5, 10, 9, 0))
         val discountPolicy = DiscountPolicy()
         val totalAmount = 10000
         val expectAmount = 7000

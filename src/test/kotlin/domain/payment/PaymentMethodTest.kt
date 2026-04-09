@@ -30,7 +30,6 @@ class PaymentMethodTest {
 
     @Test
     fun `결제 수단 외 글자가 들어올 시 IllegalArgumentException을 반환한다`() {
-
         assertThrows<IllegalArgumentException> { PaymentMethod.validate(3) }
         assertThrows<IllegalArgumentException> { PaymentMethod.validate(123) }
     }

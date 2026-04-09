@@ -10,9 +10,9 @@ class Payment(
     fun pay(
         pointAmount: Int = 0,
         account: Account,
-        selectedPaymentMethod: PaymentMethod
-    ): PayResult {
-        return runCatching {
+        selectedPaymentMethod: PaymentMethod,
+    ): PayResult =
+        runCatching {
             val discountedTotalAmount = discountedTotalAmount()
             val amountAfterPoint = applyPoint(discountedTotalAmount, account, pointAmount)
             val paidAmount = selectPaymentMethod(amountAfterPoint, selectedPaymentMethod)
@@ -28,17 +28,22 @@ class Payment(
                 message = exception.message ?: "결제에 실패했습니다.",
             )
         }
-    }
 
-    fun applyPoint(amount: Int, account: Account, point: Int): Int {
+    fun applyPoint(
+        amount: Int,
+        account: Account,
+        point: Int,
+    ): Int {
         require(amount >= point) { "포인트 사용액수는 구매금액을 초과할 수 없습니다." }
 
         account.useMyPoint(point)
         return amount - point
     }
 
-    fun selectPaymentMethod(amount: Int, paymentMethod: PaymentMethod): Int =
-        paymentMethod.calculateDiscount(amount)
+    fun selectPaymentMethod(
+        amount: Int,
+        paymentMethod: PaymentMethod,
+    ): Int = paymentMethod.calculateDiscount(amount)
 
     fun discountedTotalAmount(): Int =
         cart.items.sumOf { reserved ->

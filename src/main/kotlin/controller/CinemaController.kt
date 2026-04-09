@@ -37,9 +37,7 @@ class CinemaController(
         proceedPayment()
     }
 
-    private fun isReservationStarted(): Boolean {
-        return inputView.readYesOrNo("").uppercase() == "Y"
-    }
+    private fun isReservationStarted(): Boolean = inputView.readYesOrNo("").uppercase() == "Y"
 
     private fun reserveMovies() {
         do {
@@ -47,9 +45,7 @@ class CinemaController(
         } while (askToAddMoreMovie())
     }
 
-    private fun askToAddMoreMovie(): Boolean {
-        return inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
-    }
+    private fun askToAddMoreMovie(): Boolean = inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
 
     private fun reserveOneMovie() {
         val title = inputView.readMovieTitle()
@@ -58,31 +54,34 @@ class CinemaController(
         val selectedScreening = readAvailableScreening(availableScreenings)
         val selectedSeats = retryPrompt { readAvailableSeats(selectedScreening) }
 
-        val reservedItem = ReservedScreen(
-            screen = selectedScreening,
-            seats = selectedSeats,
-        )
+        val reservedItem =
+            ReservedScreen(
+                screen = selectedScreening,
+                seats = selectedSeats,
+            )
 
         addToCart(reservedItem)
         outputView.printCartAdded(reservedItem)
     }
 
-    private fun readDate(): LocalDate {
-        return try {
+    private fun readDate(): LocalDate =
+        try {
             LocalDate.parse(inputView.readDate())
         } catch (e: Exception) {
             throw IllegalArgumentException("날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)")
         }
-    }
 
-    private fun findAvailableScreenings(title: String, date: LocalDate): List<Screening> {
+    private fun findAvailableScreenings(
+        title: String,
+        date: LocalDate,
+    ): List<Screening> {
         val screenings = repository.findByMovieTitleAndDate(title, date)
         require(screenings.isNotEmpty()) { "해당 조건의 상영이 없습니다." }
         return screenings
     }
 
-    private fun readAvailableScreening(availableScreenings: List<Screening>): Screening {
-        return retryPrompt {
+    private fun readAvailableScreening(availableScreenings: List<Screening>): Screening =
+        retryPrompt {
             outputView.printScreenings(availableScreenings)
 
             val selectedNumber = inputView.readScreeningNumber()
@@ -94,7 +93,6 @@ class CinemaController(
             validateScreeningOverlap(selectedScreening)
             selectedScreening
         }
-    }
 
     private fun readAvailableSeats(screening: Screening): List<Seat> {
         outputView.printSeatLayout(allSeats, selectedScreeningReservedSeats(screening))
@@ -147,9 +145,11 @@ class CinemaController(
     private fun readSeats(): List<Seat> {
         val input = inputView.readSeatNumbers()
         require(!input.isNullOrBlank()) { "올바른 좌석 번호를 입력해주세요." }
-        val seatNumbers = input.split(",")
-            .map { it.trim().uppercase() }
-            .filter { it.isNotBlank() }
+        val seatNumbers =
+            input
+                .split(",")
+                .map { it.trim().uppercase() }
+                .filter { it.isNotBlank() }
 
         require(seatNumbers.toSet().size == seatNumbers.size) {
             "동일 좌석을 중복 예약할 수 없습니다."
@@ -158,7 +158,10 @@ class CinemaController(
         return allSeats.findAllBySeatNumbers(seatNumbers)
     }
 
-    private fun validateSeatsNotReserved(screening: Screening, seats: List<Seat>) {
+    private fun validateSeatsNotReserved(
+        screening: Screening,
+        seats: List<Seat>,
+    ) {
         require(seats.none { screening.isReserved(it) }) {
             "이미 예약된 좌석은 다시 선택할 수 없습니다."
         }
@@ -172,29 +175,33 @@ class CinemaController(
             val seats = it.seats.joinToString(", ") { seat -> seat.seatNumber }
             outputView.printMessage(
                 "- [${it.screen.movie.title.value}] " +
-                        "${it.screen.startTime.value.toLocalDate()} " +
-                        "${it.screen.startTime.value.toLocalTime()} " +
-                        "좌석: $seats"
+                    "${it.screen.startTime.value.toLocalDate()} " +
+                    "${it.screen.startTime.value.toLocalTime()} " +
+                    "좌석: $seats",
             )
         }
 
         outputView.printMessage(
             "결제 금액: ${"%,d".format(result.paidAmount)}원  " +
-                    "(포인트 ${"%,d".format(result.usedPoint)}원 사용)"
+                "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
         )
         outputView.printMessage("")
         outputView.printMessage("감사합니다.")
     }
 
     private fun selectedScreeningReservedSeats(screening: Screening): List<Seat> {
-        val sameScreen = repository.screenings.firstOrNull {
-            it.movie == screening.movie && it.startTime == screening.startTime
-        } ?: screening
+        val sameScreen =
+            repository.screenings.firstOrNull {
+                it.movie == screening.movie && it.startTime == screening.startTime
+            } ?: screening
 
         return allSeats.allSeats().filter { sameScreen.isReserved(it) }
     }
 
-    private fun updateScreeningReservation(screening: Screening, selectedSeats: List<Seat>) {
+    private fun updateScreeningReservation(
+        screening: Screening,
+        selectedSeats: List<Seat>,
+    ) {
         repository.updateScreening(
             repository.screenings.map {
                 if (it.movie == screening.movie && it.startTime == screening.startTime) {
@@ -202,7 +209,7 @@ class CinemaController(
                 } else {
                     it
                 }
-            }
+            },
         )
     }
 

@@ -29,7 +29,7 @@ class InputView {
     fun readPointAmount(): Int {
         println("사용할 포인트를 입력하세요 (없으면 0):")
         val point = readln().trim().toIntOrNull()
-        require(point != null && point >= 0) {"올바른 포인트 액수를 입력해주세요."}
+        require(point != null && point >= 0) { "올바른 포인트 액수를 입력해주세요." }
         return point
     }
 

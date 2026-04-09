@@ -12,18 +12,27 @@ class CinemaRepositoryTest {
 
     @Test
     fun `제목과 날짜가 주어지면 해당하는 상영을 찾는다`() {
-        val resultScreening = cinemaRepository.findByMovieTitleAndDate(
-            "어벤져스",
-            LocalDate.of(2026, 4, 10)
-        )
+        val resultScreening =
+            cinemaRepository.findByMovieTitleAndDate(
+                "어벤져스",
+                LocalDate.of(2026, 4, 10),
+            )
 
         assertEquals(
-            ScreeningMockData.screenings().first().movie.title.value,
-            resultScreening.first().movie.title.value
+            ScreeningMockData
+                .screenings()
+                .first()
+                .movie.title.value,
+            resultScreening
+                .first()
+                .movie.title.value,
         )
         assertEquals(
-            ScreeningMockData.screenings().first().startTime.value,
-            resultScreening.first().startTime.value
+            ScreeningMockData
+                .screenings()
+                .first()
+                .startTime.value,
+            resultScreening.first().startTime.value,
         )
     }
 

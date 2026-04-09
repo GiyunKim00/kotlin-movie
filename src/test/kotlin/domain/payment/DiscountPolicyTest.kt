@@ -14,15 +14,15 @@ class DiscountPolicyTest {
 
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(10, totalAmount)
+            discountPolicy.discountByMovieDay(10, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(20, totalAmount)
+            discountPolicy.discountByMovieDay(20, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(30, totalAmount)
+            discountPolicy.discountByMovieDay(30, totalAmount),
         )
     }
 
@@ -34,27 +34,27 @@ class DiscountPolicyTest {
 
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(9, totalAmount)
+            discountPolicy.discountByMovieDay(9, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(11, totalAmount)
+            discountPolicy.discountByMovieDay(11, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(29, totalAmount)
+            discountPolicy.discountByMovieDay(29, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(1, totalAmount)
+            discountPolicy.discountByMovieDay(1, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(15, totalAmount)
+            discountPolicy.discountByMovieDay(15, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByMovieDay(19, totalAmount)
+            discountPolicy.discountByMovieDay(19, totalAmount),
         )
     }
 
@@ -70,15 +70,15 @@ class DiscountPolicyTest {
 
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour2, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour2, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour3, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour3, totalAmount),
         )
     }
 
@@ -93,11 +93,11 @@ class DiscountPolicyTest {
 
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour1, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour1, totalAmount),
         )
         assertEquals(
             expectAmount,
-            discountPolicy.discountByTimeSale(movieHour2, totalAmount)
+            discountPolicy.discountByTimeSale(movieHour2, totalAmount),
         )
     }
 
@@ -109,7 +109,7 @@ class DiscountPolicyTest {
         val expectAmount = 7000
         assertEquals(
             expectAmount,
-            discountPolicy.discount(movieHour, totalAmount)
+            discountPolicy.discount(movieHour, totalAmount),
         )
     }
 }

@@ -1,12 +1,16 @@
 package domain.screening
 
-class Movie (
+class Movie(
     val title: MovieTitle,
-    val runningTime: RunningTime
+    val runningTime: RunningTime,
 )
 
 @JvmInline
-value class MovieTitle(val value: String)
-@JvmInline
-value class RunningTime(val value: Int)
+value class MovieTitle(
+    val value: String,
+)
 
+@JvmInline
+value class RunningTime(
+    val value: Int,
+)

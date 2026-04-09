@@ -22,16 +22,23 @@ class OutputView {
         }
     }
 
-    fun printSeatLayout(allSeats: Seats, reservedSeats: List<Seat>) {
+    fun printSeatLayout(
+        allSeats: Seats,
+        reservedSeats: List<Seat>,
+    ) {
         println("좌석 배치도")
         println("    1    2    3    4")
 
         val grouped = allSeats.allSeats().groupBy { it.row.value }
         grouped.forEach { (row, seats) ->
-            val seatText = seats.joinToString(" ") { seat ->
-                if (reservedSeats.contains(seat)) "[ X]"
-                else "[ ${seat.grade.name}]"
-            }
+            val seatText =
+                seats.joinToString(" ") { seat ->
+                    if (reservedSeats.contains(seat)) {
+                        "[ X]"
+                    } else {
+                        "[ ${seat.grade.name}]"
+                    }
+                }
             println("$row $seatText")
         }
     }
@@ -42,7 +49,7 @@ class OutputView {
         println(
             "- [${item.screen.movie.title.value}] ${
                 item.screen.startTime.value.format(dateTimeFormatter)
-            }  좌석: $seats"
+            }  좌석: $seats",
         )
     }
 
@@ -53,12 +60,15 @@ class OutputView {
             println(
                 "- [${it.screen.movie.title.value}] ${
                     it.screen.startTime.value.format(dateTimeFormatter)
-                }  좌석: $seats"
+                }  좌석: $seats",
             )
         }
     }
 
-    fun printPaymentResult(amount: Int, usedPoint: Int) {
+    fun printPaymentResult(
+        amount: Int,
+        usedPoint: Int,
+    ) {
         println("예매 완료")
         println("내역:")
         println("결제 금액: ${"%,d".format(amount)}원  (포인트 ${"%,d".format(usedPoint)}원 사용)")

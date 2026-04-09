@@ -3,7 +3,6 @@ package domain.reservation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-
 class SeatTest {
     @Test
     fun `좌석은 행과 열로 구성된다`() {

@@ -1,7 +1,7 @@
 package domain.reservation
 
 class Cart(
-    private var reservedScreen: List<ReservedScreen> = emptyList()
+    private var reservedScreen: List<ReservedScreen> = emptyList(),
 ) {
     val items: List<ReservedScreen> = reservedScreen.toList()
 

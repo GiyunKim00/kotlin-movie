@@ -1,15 +1,21 @@
 package domain.reservation
 
-enum class SeatGrade(val money: Int) {
+enum class SeatGrade(
+    val money: Int,
+) {
     S(money = 18_000),
     A(money = 15_000),
-    B(money = 12_000);
+    B(money = 12_000),
+    ;
 
     companion object {
         private const val ROW_SIZE = 5
         private const val COLUMN_SIZE = 4
 
-        fun grantGrade(rowIndex: Int, columnIndex: Int): SeatGrade {
+        fun grantGrade(
+            rowIndex: Int,
+            columnIndex: Int,
+        ): SeatGrade {
             require(rowIndex in 0 until ROW_SIZE) { "유효하지 않은 행 인덱스입니다." }
             require(columnIndex in 0 until COLUMN_SIZE) { "유효하지 않은 열 인덱스입니다." }
 

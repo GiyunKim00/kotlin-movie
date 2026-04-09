@@ -1,10 +1,6 @@
 package domain.reservation
 
-import domain.screening.Movie
-import domain.screening.MovieTitle
-import domain.screening.RunningTime
-import domain.screening.Screening
-import domain.screening.ScreeningStartTime
+import domain.screening.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

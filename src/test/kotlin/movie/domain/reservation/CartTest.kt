@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class CartTest {
+    private val cart = Cart()
+
     private fun createScreening(
         start: LocalDateTime,
         runningMinutes: Int,
@@ -26,13 +28,11 @@ class CartTest {
         )
     }
 
-    private fun reserved(screening: Screening): ReservedScreen =
-        ReservedScreen(screening, Seats.create(emptyList()))
+    private fun reserved(screening: Screening): ReservedScreen = ReservedScreen(screening, Seats.create(emptyList()))
 
     @Test
     fun `상영 시간이 겹치지 않으면 Cart에 정상 추가된다`() {
-        val cart = Cart()
-
+        // given
         val screening1 =
             createScreening(
                 start = LocalDateTime.of(2025, 1, 1, 10, 0),
@@ -45,18 +45,19 @@ class CartTest {
                 runningMinutes = 120,
             )
 
+        // when
         val result =
             cart
                 .add(reserved(screening1))
                 .add(reserved(screening2))
 
+        // then
         assertEquals(2, result.reservedScreens.size)
     }
 
     @Test
     fun `상영 시간이 겹치면 예외가 발생한다`() {
-        val cart = Cart()
-
+        // given
         val screening1 =
             createScreening(
                 start = LocalDateTime.of(2025, 1, 1, 10, 0),
@@ -71,6 +72,7 @@ class CartTest {
 
         val newCart = cart.add(reserved(screening1))
 
+        // when & then
         val exception =
             assertThrows(IllegalArgumentException::class.java) {
                 newCart.add(reserved(screening2))

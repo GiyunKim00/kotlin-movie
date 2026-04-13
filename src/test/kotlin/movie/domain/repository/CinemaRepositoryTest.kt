@@ -2,9 +2,9 @@ package movie.domain.repository
 
 import movie.controller.ScreeningMockData
 import movie.domain.screening.Screening
+import movie.repository.CinemaRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import movie.repository.CinemaRepository
 import java.time.LocalDate
 
 class CinemaRepositoryTest {

@@ -1,6 +1,5 @@
 package movie.domain.account
 
-import movie.domain.account.Account
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

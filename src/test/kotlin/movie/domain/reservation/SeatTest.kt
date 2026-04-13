@@ -4,50 +4,91 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class SeatTest {
+    private val column = SeatColumn(1)
+
     @Test
     fun `좌석은 행과 열로 구성된다`() {
+        // given
         val row = SeatRow("A")
-        val column = SeatColumn(1)
+
+        // when
         val seat = Seat(row, column)
 
+        // then
         assertThat(seat.row).isEqualTo(row)
         assertThat(seat.column).isEqualTo(column)
         assertThat(seat.grade).isEqualTo(SeatGrade.B)
     }
 
     @Test
-    fun `B등급 좌석은 12,000원이다`() {
+    fun `A열 좌석은 B등급 좌석이다`() {
+        // given
         val row = SeatRow("A")
-        val column = SeatColumn(1)
+
+        // when
         val seat = Seat(row, column)
 
-        assertThat(seat.grade.money).isEqualTo(12_000)
+        // then
+        assertThat(seat.grade).isEqualTo(SeatGrade.B)
     }
 
     @Test
-    fun `S등급 좌석은 18,000원이다`() {
+    fun `B열 좌석은 B등급 좌석이다`() {
+        // given
+        val row = SeatRow("B")
+
+        // when
+        val seat = Seat(row, column)
+
+        // then
+        assertThat(seat.grade).isEqualTo(SeatGrade.B)
+    }
+
+    @Test
+    fun `C열 좌석은 S등급 좌석이다`() {
+        // given
         val row = SeatRow("C")
-        val column = SeatColumn(1)
+
+        // when
         val seat = Seat(row, column)
 
-        assertThat(seat.grade.money).isEqualTo(18_000)
+        // then
+        assertThat(seat.grade).isEqualTo(SeatGrade.S)
     }
 
     @Test
-    fun `A등급 좌석은 15,000원이다`() {
-        val row = SeatRow("E")
-        val column = SeatColumn(1)
+    fun `D열 좌석은 S등급 좌석이다`() {
+        // given
+        val row = SeatRow("D")
+
+        // when
         val seat = Seat(row, column)
 
-        assertThat(seat.grade.money).isEqualTo(15_000)
+        // then
+        assertThat(seat.grade).isEqualTo(SeatGrade.S)
+    }
+
+    @Test
+    fun `E열 좌석은 A등급 좌석 가격이다`() {
+        // given
+        val row = SeatRow("E")
+
+        // when
+        val seat = Seat(row, column)
+
+        // then
+        assertThat(seat.grade).isEqualTo(SeatGrade.A)
     }
 
     @Test
     fun `좌석은 행과 열이 합쳐진 좌석 번호를 가진다`() {
+        // given
         val row = SeatRow("A")
-        val column = SeatColumn(1)
+
+        // when
         val seat = Seat(row, column)
 
+        // then
         assertThat(seat.seatNumber).isEqualTo("A1")
     }
 }

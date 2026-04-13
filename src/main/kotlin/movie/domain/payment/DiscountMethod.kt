@@ -12,7 +12,7 @@ interface DiscountMethod {
 object MovieDayDiscountMethod : DiscountMethod {
     override fun apply(
         date: ScreeningStartTime,
-        money: Int
+        money: Int,
     ): Int {
         val day = date.value.dayOfMonth
         if (day == 10 || day == 20 || day == 30) return (money * 0.9).toInt()

@@ -4,7 +4,10 @@ class SeatsPolicy(
     private val rowSize: Int = 5,
     private val columnSize: Int = 4,
 ) {
-    fun createSeat(rowIndex: Int, columnIndex: Int): Seat {
+    fun createSeat(
+        rowIndex: Int,
+        columnIndex: Int,
+    ): Seat {
         validateRowIndex(rowIndex)
         validateColumnIndex(columnIndex)
 
@@ -13,6 +16,7 @@ class SeatsPolicy(
             column = SeatColumn.setCol(columnIndex),
         )
     }
+
     fun rowRange(): IntRange = 0 until rowSize
 
     fun columnRange(): IntRange = 0 until columnSize

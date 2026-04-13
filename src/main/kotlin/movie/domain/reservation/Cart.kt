@@ -3,7 +3,6 @@ package movie.domain.reservation
 class Cart(
     val reservedScreens: List<ReservedScreen> = emptyList(),
 ) {
-
     fun add(reservedScreen: ReservedScreen): Cart {
         reservedScreens.forEach {
             require(!it.screen.overlaps(reservedScreen.screen)) {

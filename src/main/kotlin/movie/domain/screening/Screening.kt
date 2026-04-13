@@ -18,6 +18,7 @@ class Screening(
             reservedSeats = reservedSeats + seats,
         )
     }
+
     fun endTime(): LocalDateTime = startTime.value.plusMinutes(movie.runningTime.value.toLong())
 
     fun overlaps(otherScreen: Screening): Boolean = startTime.value < otherScreen.endTime() && otherScreen.startTime.value < endTime()

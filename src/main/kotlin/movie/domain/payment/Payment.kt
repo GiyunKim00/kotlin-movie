@@ -13,17 +13,19 @@ class Payment(
         selectedPaymentMethod: PaymentMethod,
     ): PayResult =
         runCatching {
-            val initialContext = PaymentContext(
-                cart = cart,
-                account = account,
-                selectedPaymentMethod = selectedPaymentMethod,
-                requestedPoint = pointAmount,
-                amount = 0,
-            )
+            val initialContext =
+                PaymentContext(
+                    cart = cart,
+                    account = account,
+                    selectedPaymentMethod = selectedPaymentMethod,
+                    requestedPoint = pointAmount,
+                    amount = 0,
+                )
 
-            val result = paymentPolicy.fold(initialContext) { context, policy ->
-                policy.apply(context)
-            }
+            val result =
+                paymentPolicy.fold(initialContext) { context, policy ->
+                    policy.apply(context)
+                }
 
             PayResult.Success(
                 cart = result.cart,

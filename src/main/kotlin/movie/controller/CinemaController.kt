@@ -111,21 +111,24 @@ class CinemaController(
     private fun proceedPayment() {
         outputView.printCart(cart)
 
-        val payment = Payment(
-            cart = cart,
-            paymentPolicy = listOf(
-                ScreeningDiscount(),
-                PointUsage,
-                PaymentMethodDiscount,
-            ),
-        )
-        val point = retryPrompt {
-            val inputPoint = inputView.readPointAmount()
-            require(account.point.amount >= inputPoint) {
-                "보유 포인트가 부족합니다."
+        val payment =
+            Payment(
+                cart = cart,
+                paymentPolicy =
+                    listOf(
+                        ScreeningDiscount(),
+                        PointUsage,
+                        PaymentMethodDiscount,
+                    ),
+            )
+        val point =
+            retryPrompt {
+                val inputPoint = inputView.readPointAmount()
+                require(account.point.amount >= inputPoint) {
+                    "보유 포인트가 부족합니다."
+                }
+                inputPoint
             }
-            inputPoint
-        }
         val paymentMethod = retryPrompt { PaymentMethod.validate(inputView.readPaymentMethod()) }
 
         outputView.printMessage("가격 계산")
@@ -160,10 +163,11 @@ class CinemaController(
         val input = inputView.readSeatNumbers()
         require(input.isNotBlank()) { "올바른 좌석 번호를 입력해주세요." }
 
-        val seatNumbers = input
-            .split(",")
-            .map { it.trim().uppercase() }
-            .filter { it.isNotBlank() }
+        val seatNumbers =
+            input
+                .split(",")
+                .map { it.trim().uppercase() }
+                .filter { it.isNotBlank() }
 
         require(seatNumbers.toSet().size == seatNumbers.size) {
             "동일 좌석을 중복 예약할 수 없습니다."

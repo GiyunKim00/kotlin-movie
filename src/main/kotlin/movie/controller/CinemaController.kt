@@ -111,9 +111,7 @@ class CinemaController(
     private fun proceedPayment() {
         outputView.printCart(cart)
 
-        val point = retryPrompt { inputView.readPointAmount() }
-        val paymentMethod = retryPrompt { PaymentMethod.Companion.validate(inputView.readPaymentMethod()) }
-        val payment =  Payment(
+        val payment = Payment(
             cart = cart,
             paymentPolicy = listOf(
                 ScreeningDiscount(),
@@ -121,6 +119,14 @@ class CinemaController(
                 PaymentMethodDiscount,
             ),
         )
+        val point = retryPrompt {
+            val inputPoint = inputView.readPointAmount()
+            require(account.point.amount >= inputPoint) {
+                "보유 포인트가 부족합니다."
+            }
+            inputPoint
+        }
+        val paymentMethod = retryPrompt { PaymentMethod.validate(inputView.readPaymentMethod()) }
 
         outputView.printMessage("가격 계산")
 

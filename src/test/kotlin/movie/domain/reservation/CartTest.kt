@@ -52,7 +52,7 @@ class CartTest {
                 .add(reserved(screening1))
                 .add(reserved(screening2))
 
-        assertEquals(2, result.items.size)
+        assertEquals(2, result.reservedScreens.size)
     }
 
     @Test

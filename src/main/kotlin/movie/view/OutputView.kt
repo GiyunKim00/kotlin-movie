@@ -8,7 +8,6 @@ import movie.domain.screening.Screening
 import java.time.format.DateTimeFormatter
 
 class OutputView {
-    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
     fun printStartMessage() {
@@ -55,7 +54,7 @@ class OutputView {
 
     fun printCart(cart: Cart) {
         println("장바구니")
-        cart.items.forEach {
+        cart.reservedScreens.forEach {
             val seats = it.seats.joinToString(", ") { seat -> seat.seatNumber }
             println(
                 "- [${it.screen.movie.title.value}] ${

@@ -21,7 +21,7 @@ class ScreeningDiscount(
 ) : PaymentPolicy {
     override fun apply(context: PaymentContext): PaymentContext {
         val discountedAmount =
-            context.cart.items.sumOf { reserved ->
+            context.cart.reservedScreens.sumOf { reserved ->
                 discountPolicy.discount(reserved.screen.startTime, reserved.price())
             }
 

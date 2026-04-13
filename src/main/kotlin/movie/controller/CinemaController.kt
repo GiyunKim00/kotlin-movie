@@ -145,7 +145,7 @@ class CinemaController(
     }
 
     private fun validateScreeningOverlap(target: Screening) {
-        cart.items.forEach {
+        cart.reservedScreens.forEach {
             require(!it.screen.overlaps(target)) {
                 "선택하신 상영 시간이 겹칩니다. 다른 시간을 선택해 주세요."
             }
@@ -181,7 +181,7 @@ class CinemaController(
         outputView.printMessage("예매 완료")
         outputView.printMessage("내역:")
 
-        result.cart.items.forEach {
+        result.cart.reservedScreens.forEach {
             val seats = it.seats.joinToString(", ") { seat -> seat.seatNumber }
             outputView.printMessage(
                 "- [${it.screen.movie.title.value}] " +

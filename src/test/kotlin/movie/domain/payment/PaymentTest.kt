@@ -7,13 +7,12 @@ import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seat
 import movie.domain.reservation.SeatColumn
-import movie.domain.reservation.SeatGrade
 import movie.domain.reservation.SeatRow
+import movie.domain.reservation.Seats
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import kotlin.apply
 
 class PaymentTest {
     private val emptyCart = Cart()
@@ -156,9 +155,11 @@ class PaymentTest {
     private val cart = Cart().add(
         ReservedScreen(
             screen = ScreeningMockData.screenings().first(),
-            seats = listOf(
-                Seat(SeatRow("A"), SeatColumn(2), SeatGrade.S),
-                Seat(SeatRow("B"), SeatColumn(2), SeatGrade.B),
+            seats = Seats.create(
+                listOf(
+                    Seat(SeatRow("A"), SeatColumn(2)),
+                    Seat(SeatRow("B"), SeatColumn(2)),
+                )
             ),
         ),
     )
@@ -175,7 +176,7 @@ class PaymentTest {
 
         val result = ScreeningDiscount().apply(context)
 
-        assertEquals(25_000, result.amount)
+        assertEquals(19_600, result.amount)
     }
 
     private class AddAmountPolicy(

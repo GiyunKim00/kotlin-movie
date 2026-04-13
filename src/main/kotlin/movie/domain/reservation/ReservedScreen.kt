@@ -4,7 +4,7 @@ import movie.domain.screening.Screening
 
 class ReservedScreen(
     val screen: Screening,
-    val seats: List<Seat>,
+    val seats: Seats,
 ) {
-    fun price(): Int = seats.sumOf { it.grade.money }
+    fun price(): Int = seats.seats.sumOf { it.grade.money }
 }

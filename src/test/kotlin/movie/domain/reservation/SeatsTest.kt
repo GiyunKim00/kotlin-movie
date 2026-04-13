@@ -1,6 +1,5 @@
 package movie.domain.reservation
 
-import movie.domain.reservation.Seats
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -14,8 +13,8 @@ class SeatsTest {
 
         val foundSeat = seats.findAllBySeatNumbers(findingSeats)
 
-        assertEquals(findingSeats.first(), foundSeat.first().seatNumber)
-        assertEquals(findingSeats[1], foundSeat[1].seatNumber)
+        assertEquals(findingSeats[0], foundSeat.seats[0].seatNumber)
+        assertEquals(findingSeats[1], foundSeat.seats[1].seatNumber)
     }
 
     @Test

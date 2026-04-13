@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test
 
 class AccountTest {
     @Test
-    fun `초기 포인트 2000원이 주어진다`() {
-        val account = Account()
+    fun `초기 포인트는 제공된 값으로 설정된다`() {
+        val givenPointAmount = 5_000
+        val account = Account(Point(givenPointAmount))
 
-        assertEquals(2000, account.point.amount)
+        assertEquals(givenPointAmount, account.point.amount)
     }
 }

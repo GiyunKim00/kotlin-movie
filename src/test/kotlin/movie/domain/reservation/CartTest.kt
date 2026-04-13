@@ -27,7 +27,7 @@ class CartTest {
     }
 
     private fun reserved(screening: Screening): ReservedScreen =
-        ReservedScreen(screening, emptyList())
+        ReservedScreen(screening, Seats.create(emptyList()))
 
     @Test
     fun `상영 시간이 겹치지 않으면 Cart에 정상 추가된다`() {

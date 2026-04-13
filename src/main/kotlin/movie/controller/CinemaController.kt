@@ -1,7 +1,6 @@
 package movie.controller
 
 import movie.domain.account.Account
-import movie.domain.payment.DiscountPolicy
 import movie.domain.payment.PayResult
 import movie.domain.payment.Payment
 import movie.domain.payment.PaymentMethod
@@ -16,7 +15,6 @@ import movie.domain.screening.Screening
 import movie.repository.CinemaRepository
 import movie.view.InputView
 import movie.view.OutputView
-import java.lang.Exception
 import java.time.LocalDate
 
 class CinemaController(
@@ -24,7 +22,7 @@ class CinemaController(
     private val inputView: InputView,
     private val outputView: OutputView,
     private val account: Account = Account(),
-    private val allSeats: Seats = Seats.Companion.create(),
+    private val allSeats: Seats = Seats.create(),
 ) {
     private var cart: Cart = Cart()
 
@@ -97,7 +95,7 @@ class CinemaController(
             selectedScreening
         }
 
-    private fun readAvailableSeats(screening: Screening): List<Seat> {
+    private fun readAvailableSeats(screening: Screening): Seats {
         outputView.printSeatLayout(allSeats, selectedScreeningReservedSeats(screening))
 
         val selectedSeats = readSeats()
@@ -107,7 +105,7 @@ class CinemaController(
 
     private fun addToCart(reservedItem: ReservedScreen) {
         cart = cart.add(reservedItem)
-        updateScreeningReservation(reservedItem.screen, reservedItem.seats)
+        updateScreeningReservation(reservedItem.screen, reservedItem.seats.seats)
     }
 
     private fun proceedPayment() {
@@ -152,14 +150,14 @@ class CinemaController(
         }
     }
 
-    private fun readSeats(): List<Seat> {
+    private fun readSeats(): Seats {
         val input = inputView.readSeatNumbers()
-        require(!input.isNullOrBlank()) { "올바른 좌석 번호를 입력해주세요." }
-        val seatNumbers =
-            input
-                .split(",")
-                .map { it.trim().uppercase() }
-                .filter { it.isNotBlank() }
+        require(input.isNotBlank()) { "올바른 좌석 번호를 입력해주세요." }
+
+        val seatNumbers = input
+            .split(",")
+            .map { it.trim().uppercase() }
+            .filter { it.isNotBlank() }
 
         require(seatNumbers.toSet().size == seatNumbers.size) {
             "동일 좌석을 중복 예약할 수 없습니다."
@@ -170,9 +168,9 @@ class CinemaController(
 
     private fun validateSeatsNotReserved(
         screening: Screening,
-        seats: List<Seat>,
+        seats: Seats,
     ) {
-        require(seats.none { screening.isReserved(it) }) {
+        require(seats.seats.none { screening.isReserved(it) }) {
             "이미 예약된 좌석은 다시 선택할 수 없습니다."
         }
     }
@@ -182,7 +180,7 @@ class CinemaController(
         outputView.printMessage("내역:")
 
         result.cart.reservedScreens.forEach {
-            val seats = it.seats.joinToString(", ") { seat -> seat.seatNumber }
+            val seats = it.seats.seats.joinToString(", ") { seat -> seat.seatNumber }
             outputView.printMessage(
                 "- [${it.screen.movie.title.value}] " +
                     "${it.screen.startTime.value.toLocalDate()} " +
@@ -205,7 +203,7 @@ class CinemaController(
                 it.movie == screening.movie && it.startTime == screening.startTime
             } ?: screening
 
-        return allSeats.allSeats().filter { sameScreen.isReserved(it) }
+        return allSeats.seats.filter { sameScreen.isReserved(it) }
     }
 
     private fun updateScreeningReservation(

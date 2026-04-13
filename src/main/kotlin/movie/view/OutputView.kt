@@ -28,7 +28,7 @@ class OutputView {
         println("좌석 배치도")
         println("    1    2    3    4")
 
-        val grouped = allSeats.allSeats().groupBy { it.row.value }
+        val grouped = allSeats.seats.groupBy { it.row.value }
         grouped.forEach { (row, seats) ->
             val seatText =
                 seats.joinToString(" ") { seat ->
@@ -43,7 +43,7 @@ class OutputView {
     }
 
     fun printCartAdded(item: ReservedScreen) {
-        val seats = item.seats.joinToString(", ") { it.seatNumber }
+        val seats = item.seats.seats.joinToString(", ") { it.seatNumber }
         println("장바구니에 추가됨")
         println(
             "- [${item.screen.movie.title.value}] ${
@@ -55,7 +55,7 @@ class OutputView {
     fun printCart(cart: Cart) {
         println("장바구니")
         cart.reservedScreens.forEach {
-            val seats = it.seats.joinToString(", ") { seat -> seat.seatNumber }
+            val seats = it.seats.seats.joinToString(", ") { seat -> seat.seatNumber }
             println(
                 "- [${it.screen.movie.title.value}] ${
                     it.screen.startTime.value.format(dateTimeFormatter)

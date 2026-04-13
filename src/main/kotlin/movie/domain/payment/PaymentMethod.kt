@@ -1,5 +1,4 @@
 package movie.domain.payment
-
 enum class PaymentMethod(
     val discountRate: Double,
 ) {

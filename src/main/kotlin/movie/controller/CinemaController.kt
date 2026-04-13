@@ -5,6 +5,9 @@ import movie.domain.payment.DiscountPolicy
 import movie.domain.payment.PayResult
 import movie.domain.payment.Payment
 import movie.domain.payment.PaymentMethod
+import movie.domain.payment.PaymentMethodDiscount
+import movie.domain.payment.PointUsage
+import movie.domain.payment.ScreeningDiscount
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seat
@@ -112,7 +115,14 @@ class CinemaController(
 
         val point = retryPrompt { inputView.readPointAmount() }
         val paymentMethod = retryPrompt { PaymentMethod.Companion.validate(inputView.readPaymentMethod()) }
-        val payment = Payment(cart, DiscountPolicy())
+        val payment =  Payment(
+            cart = cart,
+            paymentPolicy = listOf(
+                ScreeningDiscount(),
+                PointUsage,
+                PaymentMethodDiscount,
+            ),
+        )
 
         outputView.printMessage("가격 계산")
 

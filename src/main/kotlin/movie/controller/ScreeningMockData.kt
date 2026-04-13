@@ -28,42 +28,42 @@ object ScreeningMockData {
             )
 
         return listOf(
-            Screening.Companion.create(
+            Screening(
                 movie = movie1,
                 startTime =
                     ScreeningStartTime(
                         LocalDateTime.of(2026, 4, 10, 10, 0),
                     ),
             ),
-            Screening.Companion.create(
+            Screening(
                 movie = movie1,
                 startTime =
                     ScreeningStartTime(
                         LocalDateTime.of(2026, 4, 10, 14, 0),
                     ),
             ),
-            Screening.Companion.create(
+            Screening(
                 movie = movie2,
                 startTime =
                     ScreeningStartTime(
                         LocalDateTime.of(2026, 4, 10, 11, 30),
                     ),
             ),
-            Screening.Companion.create(
+            Screening(
                 movie = movie2,
                 startTime =
                     ScreeningStartTime(
                         LocalDateTime.of(2026, 4, 10, 17, 0),
                     ),
             ),
-            Screening.Companion.create(
+            Screening(
                 movie = movie3,
                 startTime =
                     ScreeningStartTime(
                         LocalDateTime.of(2026, 4, 10, 13, 0),
                     ),
             ),
-            Screening.Companion.create(
+            Screening(
                 movie = movie3,
                 startTime =
                     ScreeningStartTime(

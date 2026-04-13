@@ -1,12 +1,10 @@
 package movie.domain.reservation
 
-import movie.domain.reservation.Cart
 import movie.domain.screening.Movie
 import movie.domain.screening.MovieTitle
 import movie.domain.screening.RunningTime
 import movie.domain.screening.Screening
 import movie.domain.screening.ScreeningStartTime
-import movie.domain.reservation.ReservedScreen
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -22,7 +20,7 @@ class CartTest {
                 MovieTitle("테스트 영화"),
                 RunningTime(runningMinutes),
             )
-        return Screening.create(
+        return Screening(
             movie = movie,
             startTime = ScreeningStartTime(start),
         )

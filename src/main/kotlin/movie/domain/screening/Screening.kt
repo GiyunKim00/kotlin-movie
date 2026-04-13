@@ -3,24 +3,11 @@ package movie.domain.screening
 import movie.domain.reservation.Seat
 import java.time.LocalDateTime
 
-class Screening private constructor(
+class Screening(
     val movie: Movie,
     val startTime: ScreeningStartTime,
-    private val reservedSeats: List<Seat>,
+    private val reservedSeats: List<Seat> = emptyList(),
 ) {
-    companion object {
-        fun create(
-            movie: Movie,
-            startTime: ScreeningStartTime,
-            reservedSeats: List<Seat> = emptyList(),
-        ): Screening =
-            Screening(
-                movie = movie,
-                startTime = startTime,
-                reservedSeats = reservedSeats,
-            )
-    }
-
     fun isReserved(seat: Seat): Boolean = reservedSeats.contains(seat)
 
     fun reserve(seats: List<Seat>): Screening {
@@ -31,9 +18,6 @@ class Screening private constructor(
             reservedSeats = reservedSeats + seats,
         )
     }
-
-    fun isMovie(movie: Movie): Boolean = this.movie == movie
-
     fun endTime(): LocalDateTime = startTime.value.plusMinutes(movie.runningTime.value.toLong())
 
     fun overlaps(otherScreen: Screening): Boolean = startTime.value < otherScreen.endTime() && otherScreen.startTime.value < endTime()

@@ -1,9 +1,5 @@
 package movie.domain.reservation
 
-import movie.domain.reservation.Seat
-import movie.domain.reservation.SeatColumn
-import movie.domain.reservation.SeatGrade
-import movie.domain.reservation.SeatRow
 import movie.domain.screening.Movie
 import movie.domain.screening.MovieTitle
 import movie.domain.screening.RunningTime
@@ -18,7 +14,7 @@ class ReservedScreeingTest {
     fun `예약된 좌석을 확인한다`() {
         val seats = listOf(Seat(SeatRow("A"), SeatColumn(1), SeatGrade.S))
         val reservedSeats =
-            Screening.create(
+            Screening(
                 movie =
                     Movie(
                         MovieTitle("어벤져스"),
@@ -35,7 +31,7 @@ class ReservedScreeingTest {
     fun `예약이 되어 있지 않다면 False를 반환한다`() {
         val seats = listOf(Seat(SeatRow("A"), SeatColumn(1), SeatGrade.S))
         val reservedSeats =
-            Screening.create(
+            Screening(
                 movie =
                     Movie(
                         MovieTitle("어벤져스"),

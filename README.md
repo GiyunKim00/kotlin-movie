@@ -64,4 +64,4 @@
 - [x] Seats 개선
 - [x] seatNumber 로직 개선
 - [x] Movie Title 및 RunningTime 규칙 추가
-- [ ] 사용하지 않는 매서드 제거
+- [x] 사용하지 않는 매서드 제거

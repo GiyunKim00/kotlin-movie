@@ -56,17 +56,6 @@ class OutputView {
         }
     }
 
-    fun printPaymentResult(
-        amount: Int,
-        usedPoint: Int,
-    ) {
-        println("예매 완료")
-        println("내역:")
-        println("결제 금액: ${"%,d".format(amount)}원  (포인트 ${"%,d".format(usedPoint)}원 사용)")
-        println()
-        println("감사합니다.")
-    }
-
     fun printMessage(message: String) {
         println(message)
     }

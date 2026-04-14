@@ -8,8 +8,7 @@ data class Seat(
 
     fun price(): Int = grade.money.amount
 
-    fun matches(seatNumber: String): Boolean =
-        row.value + column.value.toString() == seatNumber
+    fun matches(seatNumber: String): Boolean = row.value + column.value.toString() == seatNumber
 }
 
 @JvmInline

@@ -8,12 +8,13 @@ import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDateTime
 
 class DiscountPolicyTest {
-    private val discountPolicy = DiscountPolicy(
-        listOf(
-            MovieDayDiscountMethod,
-            TimeSaleDiscountMethod,
-        ),
-    )
+    private val discountPolicy =
+        DiscountPolicy(
+            listOf(
+                MovieDayDiscountMethod,
+                TimeSaleDiscountMethod,
+            ),
+        )
 
     private val totalAmount = Money(10_000)
     val movieDayDiscountRate = 0.9
@@ -34,7 +35,6 @@ class DiscountPolicyTest {
         // then
         assertThat(discountedAmount).isEqualTo(expectedMovieDayDiscountAmount)
     }
-
 
     @ParameterizedTest(name = "{0}일은 무비데이 할인이 적용되지 않는다")
     @ValueSource(ints = [11, 21, 29])

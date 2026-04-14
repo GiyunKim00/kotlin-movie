@@ -41,8 +41,8 @@ class OutputView {
         println("장바구니에 추가됨")
         println(
             "- [${item.screen.movie.title.value}] " +
-                    "${item.screen.startTime.value.format(dateTimeFormatter)}  " +
-                    "좌석: ${item.seats.toDisplayText()}",
+                "${item.screen.startTime.value.format(dateTimeFormatter)}  " +
+                "좌석: ${item.seats.toDisplayText()}",
         )
     }
 
@@ -51,8 +51,8 @@ class OutputView {
         cart.reservedScreens.forEach {
             println(
                 "- [${it.screen.movie.title.value}] " +
-                        "${it.screen.startTime.value.format(dateTimeFormatter)}  " +
-                        "좌석: ${it.seats.toDisplayText()}",
+                    "${it.screen.startTime.value.format(dateTimeFormatter)}  " +
+                    "좌석: ${it.seats.toDisplayText()}",
             )
         }
     }
@@ -64,15 +64,15 @@ class OutputView {
         result.cart.reservedScreens.forEach {
             printMessage(
                 "- [${it.screen.movie.title.value}] " +
-                        "${it.screen.startTime.value.toLocalDate()} " +
-                        "${it.screen.startTime.value.toLocalTime()} " +
-                        "좌석: ${it.seats.toDisplayText()}",
+                    "${it.screen.startTime.value.toLocalDate()} " +
+                    "${it.screen.startTime.value.toLocalTime()} " +
+                    "좌석: ${it.seats.toDisplayText()}",
             )
         }
 
         printMessage(
             "결제 금액: ${"%,d".format(result.paidAmount.amount)}원  " +
-                    "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
+                "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
         )
         printMessage("")
         printMessage("감사합니다.")

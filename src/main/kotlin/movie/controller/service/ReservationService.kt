@@ -83,7 +83,9 @@ class ReservationService(
             repository.screenings.map {
                 if (it.movie == screening.movie && it.startTime == screening.startTime) {
                     it.reserve(selectedSeats.values)
-                } else it
+                } else {
+                    it
+                }
             },
         )
     }

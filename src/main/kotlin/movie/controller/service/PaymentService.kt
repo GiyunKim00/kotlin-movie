@@ -26,17 +26,19 @@ class PaymentService(
         point: Int,
         paymentMethod: PaymentMethod,
     ): PayResult {
-        val discountPolicy = DiscountPolicy(
-            listOf(
-                MovieDayDiscountMethod,
-                TimeSaleDiscountMethod,
-            ),
-        )
+        val discountPolicy =
+            DiscountPolicy(
+                listOf(
+                    MovieDayDiscountMethod,
+                    TimeSaleDiscountMethod,
+                ),
+            )
 
-        val payment = Payment(
-            cart = cart,
-            discountPolicy = discountPolicy,
-        )
+        val payment =
+            Payment(
+                cart = cart,
+                discountPolicy = discountPolicy,
+            )
 
         return payment.pay(point, account, paymentMethod)
     }

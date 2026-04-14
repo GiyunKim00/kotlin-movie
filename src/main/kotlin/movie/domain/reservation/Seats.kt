@@ -26,13 +26,13 @@ class Seats(
     fun contains(seat: Seat): Boolean = values.contains(seat)
 
     fun groupByRow(): Map<SeatRow, Seats> =
-        values.groupBy { it.row }
+        values
+            .groupBy { it.row }
             .mapValues { (_, seats) -> Seats(seats) }
 
     fun findBySeatNumber(seatNumber: String): Seat =
         values.firstOrNull { it.matches(seatNumber) }
             ?: throw IllegalArgumentException("유효하지 않은 좌석 번호입니다.")
 
-    fun findAllBySeatNumbers(seatNumbers: List<String>): Seats =
-        Seats(seatNumbers.map { findBySeatNumber(it) })
+    fun findAllBySeatNumbers(seatNumbers: List<String>): Seats = Seats(seatNumbers.map { findBySeatNumber(it) })
 }

@@ -2,7 +2,8 @@ package movie.controller.parser
 
 object SeatParser {
     fun parse(raw: String): List<String> =
-        raw.split(",")
+        raw
+            .split(",")
             .map { it.trim().uppercase() }
             .filter { it.isNotBlank() }
 }

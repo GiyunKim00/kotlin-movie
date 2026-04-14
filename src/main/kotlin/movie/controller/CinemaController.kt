@@ -43,8 +43,7 @@ class CinemaController(
         } while (askToAddMoreMovie())
     }
 
-    private fun askToAddMoreMovie(): Boolean =
-        inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
+    private fun askToAddMoreMovie(): Boolean = inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
 
     private fun reserveOneMovie() {
         val title = inputView.readMovieTitle()
@@ -55,13 +54,15 @@ class CinemaController(
 
         outputView.printSeatLayout(allSeats, reservedSeats)
 
-        val seatNumbers = retryPrompt {
-            reservationService.parseSeatNumbers(inputView.readSeatNumbers())
-        }
+        val seatNumbers =
+            retryPrompt {
+                reservationService.parseSeatNumbers(inputView.readSeatNumbers())
+            }
 
-        val result = retryPrompt {
-            reservationService.reserve(cart, selectedScreening, seatNumbers)
-        }
+        val result =
+            retryPrompt {
+                reservationService.reserve(cart, selectedScreening, seatNumbers)
+            }
 
         cart = result.updatedCart
         outputView.printCartAdded(result.reservedScreen)
@@ -84,12 +85,14 @@ class CinemaController(
     private fun proceedPayment() {
         outputView.printCart(cart)
 
-        val point = retryPrompt {
-            paymentService.validatePoint(inputView.readPointAmount())
-        }
-        val paymentMethod = retryPrompt {
-            paymentService.validatePaymentMethod(inputView.readPaymentMethod())
-        }
+        val point =
+            retryPrompt {
+                paymentService.validatePoint(inputView.readPointAmount())
+            }
+        val paymentMethod =
+            retryPrompt {
+                paymentService.validatePaymentMethod(inputView.readPaymentMethod())
+            }
 
         outputView.printMessage("가격 계산")
 

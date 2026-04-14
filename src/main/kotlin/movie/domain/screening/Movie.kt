@@ -17,7 +17,7 @@ value class MovieTitle(
 @JvmInline
 value class RunningTime(
     val value: Int,
-){
+) {
     init {
         require(value > 0) { "상영 시간은 0 이하일 수 없습니다." }
     }

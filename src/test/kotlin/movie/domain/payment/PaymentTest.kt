@@ -10,44 +10,47 @@ import movie.domain.reservation.SeatColumn
 import movie.domain.reservation.SeatRow
 import movie.domain.reservation.Seats
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class PaymentTest {
-    private val discountPolicy = DiscountPolicy(
-        listOf(
-            MovieDayDiscountMethod,
-            TimeSaleDiscountMethod,
-        ),
-    )
-
-    private val cart = Cart().add(
-        ReservedScreen(
-            screen = ScreeningMockData.screenings().first(),
-            seats = Seats(
-                listOf(
-                    Seat(SeatRow("A"), SeatColumn(2)),
-                    Seat(SeatRow("B"), SeatColumn(2)),
-                ),
+    private val discountPolicy =
+        DiscountPolicy(
+            listOf(
+                MovieDayDiscountMethod,
+                TimeSaleDiscountMethod,
             ),
-        ),
-    )
+        )
+
+    private val cart =
+        Cart().add(
+            ReservedScreen(
+                screen = ScreeningMockData.screenings().first(),
+                seats =
+                    Seats(
+                        listOf(
+                            Seat(SeatRow("A"), SeatColumn(2)),
+                            Seat(SeatRow("B"), SeatColumn(2)),
+                        ),
+                    ),
+            ),
+        )
 
     @Test
     fun `여러 할인 혜택과 포인트를 적용한 후 최종 결제 금액을 반환한다`() {
         // given
-        val payment = Payment(
-            cart = cart,
-            discountPolicy = discountPolicy,
-        )
+        val payment =
+            Payment(
+                cart = cart,
+                discountPolicy = discountPolicy,
+            )
 
         // when
-        val result = payment.pay(
-            pointAmount = 2_000,
-            account = Account(),
-            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-        )
+        val result =
+            payment.pay(
+                pointAmount = 2_000,
+                account = Account(),
+                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+            )
 
         // then
         assertThat(result).isInstanceOf(PayResult.Success::class.java)
@@ -59,17 +62,19 @@ class PaymentTest {
     @Test
     fun `포인트를 사용하면 성공 결과에 usedPoint가 담긴다`() {
         // given
-        val payment = Payment(
-            cart = cart,
-            discountPolicy = discountPolicy,
-        )
+        val payment =
+            Payment(
+                cart = cart,
+                discountPolicy = discountPolicy,
+            )
 
         // when
-        val result = payment.pay(
-            pointAmount = 2_000,
-            account = Account(),
-            selectedPaymentMethod = PaymentMethod.CASH,
-        )
+        val result =
+            payment.pay(
+                pointAmount = 2_000,
+                account = Account(),
+                selectedPaymentMethod = PaymentMethod.CASH,
+            )
 
         // then
         assertThat(result).isInstanceOf(PayResult.Success::class.java)
@@ -81,17 +86,19 @@ class PaymentTest {
     @Test
     fun `보유 포인트보다 많이 사용하려고 하면 실패 결과를 반환한다`() {
         // given
-        val payment = Payment(
-            cart = cart,
-            discountPolicy = discountPolicy,
-        )
+        val payment =
+            Payment(
+                cart = cart,
+                discountPolicy = discountPolicy,
+            )
 
         // when
-        val result = payment.pay(
-            pointAmount = 2_000,
-            account = Account(Point(0)),
-            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-        )
+        val result =
+            payment.pay(
+                pointAmount = 2_000,
+                account = Account(Point(0)),
+                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+            )
 
         // then
         assertThat(result).isInstanceOf(PayResult.Failure::class.java)
@@ -102,17 +109,19 @@ class PaymentTest {
     @Test
     fun `포인트를 사용하지 않으면 결제 수단 할인만 적용된다`() {
         // given
-        val payment = Payment(
-            cart = cart,
-            discountPolicy = discountPolicy,
-        )
+        val payment =
+            Payment(
+                cart = cart,
+                discountPolicy = discountPolicy,
+            )
 
         // when
-        val result = payment.pay(
-            pointAmount = 0,
-            account = Account(),
-            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-        )
+        val result =
+            payment.pay(
+                pointAmount = 0,
+                account = Account(),
+                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+            )
 
         // then
         assertThat(result).isInstanceOf(PayResult.Success::class.java)

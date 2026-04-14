@@ -25,7 +25,7 @@ class PaymentTest {
     private val cart = Cart().add(
         ReservedScreen(
             screen = ScreeningMockData.screenings().first(),
-            seats = Seats.create(
+            seats = Seats(
                 listOf(
                     Seat(SeatRow("A"), SeatColumn(2)),
                     Seat(SeatRow("B"), SeatColumn(2)),

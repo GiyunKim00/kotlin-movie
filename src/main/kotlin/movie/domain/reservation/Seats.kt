@@ -1,6 +1,6 @@
 package movie.domain.reservation
 
-class Seats private constructor(
+class Seats(
     val values: List<Seat>,
 ) {
     companion object {
@@ -13,8 +13,6 @@ class Seats private constructor(
                 }
             return Seats(seats)
         }
-
-        fun create(seats: List<Seat>): Seats = Seats(seats)
     }
 
     fun totalPrice(): Int = values.sumOf { it.price() }

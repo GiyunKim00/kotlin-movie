@@ -68,6 +68,6 @@
 - [x] 테스트용 매서드 제거
 - [ ] CinemaController 내 Payment, Reservation 서비스 로직 분리
   - [ ] PaymentService 생성
-  - [ ] ReservationService 생성
+  - [x] ReservationService 분리
   - [x] Date 파서 분리
   - [x] Seat 파서 분리

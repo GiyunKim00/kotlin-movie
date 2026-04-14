@@ -55,7 +55,7 @@
 - [x] 불필요한 코드 베이스 삭제
 
 ### 2차 리팩토링
-- [ ] @valueSource, @ParameterizedTest 애너테이션을 활용한 for문 기반 테스트 로직 수정
+- [x] @valueSource, @ParameterizedTest 애너테이션을 활용한 for문 기반 테스트 로직 수정
 - [ ] Cart 생성자 주입
 - [ ] Account 도메인 검증 로직 추가
 - [ ] Money 포장

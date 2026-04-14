@@ -1,5 +1,6 @@
 package movie.view
 
+import movie.domain.payment.PayResult
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seats
@@ -54,6 +55,31 @@ class OutputView {
                         "좌석: ${it.seats.toDisplayText()}",
             )
         }
+    }
+
+    fun printReservationHistory(result: PayResult.Success) {
+        printMessage("예매 완료")
+        printMessage("내역:")
+
+        result.cart.reservedScreens.forEach {
+            printMessage(
+                "- [${it.screen.movie.title.value}] " +
+                        "${it.screen.startTime.value.toLocalDate()} " +
+                        "${it.screen.startTime.value.toLocalTime()} " +
+                        "좌석: ${it.seats.toDisplayText()}",
+            )
+        }
+
+        printMessage(
+            "결제 금액: ${"%,d".format(result.paidAmount.amount)}원  " +
+                    "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
+        )
+        printMessage("")
+        printMessage("감사합니다.")
+    }
+
+    fun printFinalAmount(result: PayResult.Success) {
+        printMessage("최종 결제 금액: ${"%,d".format(result.paidAmount.amount)}원")
     }
 
     fun printMessage(message: String) {

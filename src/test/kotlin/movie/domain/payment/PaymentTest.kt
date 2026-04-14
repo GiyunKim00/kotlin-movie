@@ -15,229 +15,109 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class PaymentTest {
-    private val emptyCart = Cart()
-    private val pointPolicy = PointUsage
     private val discountPolicy = DiscountPolicy(
         listOf(
             MovieDayDiscountMethod,
             TimeSaleDiscountMethod,
         ),
     )
-    private val point = Point(2_000)
 
-    @Test
-    fun `정책들을 순서대로 적용한 최종 결제 금액을 반환한다`() {
-        val payment =
-            Payment(
-                cart = emptyCart,
-                paymentPolicy =
-                    listOf(
-                        AddAmountPolicy(Money(10_000)),
-                        SubtractAmountPolicy(Money(1_000)),
-                        PaymentMethodDiscountPolicyStub,
-                    ),
-            )
-
-        val result =
-            payment.pay(
-                pointAmount = 2_000,
-                account = Account(),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-            )
-
-        assertTrue(result is PayResult.Success)
-        result as PayResult.Success
-        assertEquals(8_550, result.paidAmount)
-    }
-
-    @Test
-    fun `정책에서 사용 포인트를 반영하면 성공 결과에 usedPoint가 담긴다`() {
-        val payment =
-            Payment(
-                cart = emptyCart,
-                paymentPolicy =
-                    listOf(
-                        AddAmountPolicy(Money(10_000)),
-                        UsePointPolicyStub,
-                    ),
-            )
-
-        val result =
-            payment.pay(
-                pointAmount = 2_000,
-                account = Account(),
-                selectedPaymentMethod = PaymentMethod.CASH,
-            )
-
-        assertTrue(result is PayResult.Success)
-        result as PayResult.Success
-        assertThat(result.paidAmount).isEqualTo(8_000)
-        assertThat(result.usedPoint).isEqualTo(2_000)
-    }
-
-    @Test
-    fun `정책 적용 중 예외가 발생하면 실패 결과를 반환한다`() {
-        val payment =
-            Payment(
-                cart = emptyCart,
-                paymentPolicy =
-                    listOf(
-                        AddAmountPolicy(Money(10_000)),
-                        FailPolicy("결제 중 오류가 발생했습니다."),
-                    ),
-            )
-
-        val result =
-            payment.pay(
-                pointAmount = 1_000,
-                account = Account(),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-            )
-
-        assertTrue(result is PayResult.Failure)
-        result as PayResult.Failure
-        assertEquals("결제 중 오류가 발생했습니다.", result.message)
-    }
-
-    @Test
-    fun `포인트 사용액이 결제 금액 이하이면 해당 금액만큼 차감된다`() {
-        val context =
-            PaymentContext(
-                cart = emptyCart,
-                account = Account(point),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-                requestedPoint = 2_000,
-                amount = Money(10_000)
-            )
-
-        val result = pointPolicy.apply(context)
-
-        assertThat(result.amount).isEqualTo(Money(8_000))
-        assertThat(result.usedPoint).isEqualTo(2_000)
-    }
-
-    @Test
-    fun `포인트 사용액을 0으로 입력하면 포인트를 차감하지 않는다`() {
-        val context =
-            PaymentContext(
-                cart = emptyCart,
-                account = Account(point),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-                requestedPoint = 0,
-                amount = Money(1_000)
-            )
-
-        val result = pointPolicy.apply(context)
-
-        assertThat(result.amount).isEqualTo(Money(1_000))
-        assertThat(result.usedPoint).isEqualTo(0)
-    }
-
-    @Test
-    fun `포인트 사용액이 결제 금액을 초과하면 예외가 발생한다`() {
-        val context =
-            PaymentContext(
-                cart = emptyCart,
-                account = Account(Point(5_000)),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-                requestedPoint = 3_000,
-                amount = Money(2_000)
-            )
-
-        val exception =
-            kotlin
-                .runCatching {
-                    pointPolicy.apply(context)
-                }.exceptionOrNull()
-
-        assertTrue(exception is IllegalArgumentException)
-        assertEquals("포인트 사용액수는 구매금액을 초과할 수 없습니다.", exception?.message)
-    }
-
-    @Test
-    fun `보유 포인트보다 많이 사용하려고 하면 예외가 발생한다`() {
-        val context =
-            PaymentContext(
-                cart = emptyCart,
-                account = Account(point),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-                requestedPoint = 3_000,
-                amount = Money(10_000)
-            )
-
-        val exception =
-            kotlin
-                .runCatching {
-                    pointPolicy.apply(context)
-                }.exceptionOrNull()
-
-        assertTrue(exception is IllegalArgumentException)
-        assertEquals("보유 포인트가 부족합니다.", exception?.message)
-    }
-
-    private val cart =
-        Cart().add(
-            ReservedScreen(
-                screen = ScreeningMockData.screenings().first(),
-                seats =
-                    Seats.create(
-                        listOf(
-                            Seat(SeatRow("A"), SeatColumn(2)),
-                            Seat(SeatRow("B"), SeatColumn(2)),
-                        ),
-                    ),
+    private val cart = Cart().add(
+        ReservedScreen(
+            screen = ScreeningMockData.screenings().first(),
+            seats = Seats.create(
+                listOf(
+                    Seat(SeatRow("A"), SeatColumn(2)),
+                    Seat(SeatRow("B"), SeatColumn(2)),
+                ),
             ),
+        ),
+    )
+
+    @Test
+    fun `여러 할인 혜택과 포인트를 적용한 후 최종 결제 금액을 반환한다`() {
+        // given
+        val payment = Payment(
+            cart = cart,
+            discountPolicy = discountPolicy,
         )
 
+        // when
+        val result = payment.pay(
+            pointAmount = 2_000,
+            account = Account(),
+            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+        )
+
+        // then
+        assertThat(result).isInstanceOf(PayResult.Success::class.java)
+        result as PayResult.Success
+        assertThat(result.paidAmount).isEqualTo(Money(16_720))
+        assertThat(result.usedPoint).isEqualTo(2_000)
+    }
+
     @Test
-    fun `카트에 담긴 좌석들의 날짜 및 시간 할인 적용 금액을 계산한다`() {
-        val context =
-            PaymentContext(
-                cart = cart,
-                account = Account(),
-                selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
-                requestedPoint = 0,
-                amount = Money(0),
-            )
+    fun `포인트를 사용하면 성공 결과에 usedPoint가 담긴다`() {
+        // given
+        val payment = Payment(
+            cart = cart,
+            discountPolicy = discountPolicy,
+        )
 
-        val result = ScreeningDiscount(discountPolicy).apply(context)
+        // when
+        val result = payment.pay(
+            pointAmount = 2_000,
+            account = Account(),
+            selectedPaymentMethod = PaymentMethod.CASH,
+        )
 
-        assertThat(result.amount).isEqualTo(Money(19_600))
+        // then
+        assertThat(result).isInstanceOf(PayResult.Success::class.java)
+        result as PayResult.Success
+        assertThat(result.paidAmount).isEqualTo(Money(17_248))
+        assertThat(result.usedPoint).isEqualTo(2_000)
     }
 
-    private class AddAmountPolicy(
-        private val amountToAdd: Money,
-    ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext =
-            context.copy(amount = context.amount + amountToAdd)
+    @Test
+    fun `보유 포인트보다 많이 사용하려고 하면 실패 결과를 반환한다`() {
+        // given
+        val payment = Payment(
+            cart = cart,
+            discountPolicy = discountPolicy,
+        )
+
+        // when
+        val result = payment.pay(
+            pointAmount = 2_000,
+            account = Account(Point(0)),
+            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+        )
+
+        // then
+        assertThat(result).isInstanceOf(PayResult.Failure::class.java)
+        result as PayResult.Failure
+        assertThat(result.message).isEqualTo("보유 포인트가 부족합니다.")
     }
 
-    private class SubtractAmountPolicy(
-        private val amountToSubtract: Money,
-    ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext =
-            context.copy(amount = context.amount - amountToSubtract)
-    }
+    @Test
+    fun `포인트를 사용하지 않으면 결제 수단 할인만 적용된다`() {
+        // given
+        val payment = Payment(
+            cart = cart,
+            discountPolicy = discountPolicy,
+        )
 
-    private object UsePointPolicyStub : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext =
-            context.copy(
-                amount = context.amount - Money(context.requestedPoint),
-                usedPoint = context.requestedPoint,
-            )
-    }
+        // when
+        val result = payment.pay(
+            pointAmount = 0,
+            account = Account(),
+            selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
+        )
 
-    private object PaymentMethodDiscountPolicyStub : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext =
-            context.copy(
-                amount = context.selectedPaymentMethod.calculateDiscount(context.amount),
-            )
-    }
-
-    private class FailPolicy(
-        private val message: String,
-    ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext =
-            throw IllegalArgumentException(message)
+        // then
+        assertThat(result).isInstanceOf(PayResult.Success::class.java)
+        result as PayResult.Success
+        assertThat(result.paidAmount).isEqualTo(Money(18_620))
+        assertThat(result.usedPoint).isEqualTo(0)
     }
 }

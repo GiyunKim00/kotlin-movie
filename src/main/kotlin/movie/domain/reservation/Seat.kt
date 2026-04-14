@@ -4,9 +4,12 @@ data class Seat(
     val row: SeatRow,
     val column: SeatColumn,
 ) {
-    val seatNumber: String = "${row.value}${column.value}"
-
     val grade: SeatGrade = SeatGrade.grantGrade(row)
+
+    fun price(): Int = grade.money.amount
+
+    fun matches(seatNumber: String): Boolean =
+        row.value + column.value.toString() == seatNumber
 }
 
 @JvmInline

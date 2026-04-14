@@ -1,5 +1,6 @@
 package movie.domain.reservation
 
+import movie.view.toDisplayText
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -89,6 +90,6 @@ class SeatTest {
         val seat = Seat(row, column)
 
         // then
-        assertThat(seat.seatNumber).isEqualTo("A1")
+        assertThat(seat.toDisplayText()).isEqualTo("A1")
     }
 }

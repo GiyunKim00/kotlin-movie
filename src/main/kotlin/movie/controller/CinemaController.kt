@@ -6,18 +6,15 @@ import movie.domain.payment.MovieDayDiscountMethod
 import movie.domain.payment.PayResult
 import movie.domain.payment.Payment
 import movie.domain.payment.PaymentMethod
-import movie.domain.payment.PaymentMethodDiscount
-import movie.domain.payment.PointUsage
-import movie.domain.payment.ScreeningDiscount
 import movie.domain.payment.TimeSaleDiscountMethod
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
-import movie.domain.reservation.Seat
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import movie.repository.CinemaRepository
 import movie.view.InputView
 import movie.view.OutputView
+import movie.view.toDisplayText
 import java.time.LocalDate
 
 class CinemaController(
@@ -48,7 +45,8 @@ class CinemaController(
         } while (askToAddMoreMovie())
     }
 
-    private fun askToAddMoreMovie(): Boolean = inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
+    private fun askToAddMoreMovie(): Boolean =
+        inputView.readYesOrNo("다른 영화를 추가하시겠습니까? (Y/N)").uppercase() == "Y"
 
     private fun reserveOneMovie() {
         val title = inputView.readMovieTitle()
@@ -107,7 +105,7 @@ class CinemaController(
 
     private fun addToCart(reservedItem: ReservedScreen) {
         cart = cart.add(reservedItem)
-        updateScreeningReservation(reservedItem.screen, reservedItem.seats.seats)
+        updateScreeningReservation(reservedItem.screen, reservedItem.seats)
     }
 
     private fun proceedPayment() {
@@ -120,16 +118,11 @@ class CinemaController(
             ),
         )
 
-        val payment =
-            Payment(
-                cart = cart,
-                paymentPolicy =
-                    listOf(
-                        ScreeningDiscount(discountPolicy),
-                        PointUsage,
-                        PaymentMethodDiscount,
-                    ),
-            )
+        val payment = Payment(
+            cart = cart,
+            discountPolicy = discountPolicy,
+        )
+
         val point =
             retryPrompt {
                 val inputPoint = inputView.readPointAmount()
@@ -149,7 +142,7 @@ class CinemaController(
     }
 
     private fun confirmPayment(result: PayResult.Success) {
-        outputView.printMessage("최종 결제 금액: ${"%,d".format(result.paidAmount)}원")
+        outputView.printMessage("최종 결제 금액: ${"%,d".format(result.paidAmount.amount)}원")
 
         val confirm = inputView.readYesOrNo("위 금액으로 결제하시겠습니까? (Y/N)").uppercase()
         if (confirm == "Y") {
@@ -189,7 +182,7 @@ class CinemaController(
         screening: Screening,
         seats: Seats,
     ) {
-        require(seats.seats.none { screening.isReserved(it) }) {
+        require(!screening.hasReservedSeat(seats)) {
             "이미 예약된 좌석은 다시 선택할 수 없습니다."
         }
     }
@@ -199,40 +192,39 @@ class CinemaController(
         outputView.printMessage("내역:")
 
         result.cart.reservedScreens.forEach {
-            val seats = it.seats.seats.joinToString(", ") { seat -> seat.seatNumber }
             outputView.printMessage(
                 "- [${it.screen.movie.title.value}] " +
-                    "${it.screen.startTime.value.toLocalDate()} " +
-                    "${it.screen.startTime.value.toLocalTime()} " +
-                    "좌석: $seats",
+                        "${it.screen.startTime.value.toLocalDate()} " +
+                        "${it.screen.startTime.value.toLocalTime()} " +
+                        "좌석: ${it.seats.toDisplayText()}",
             )
         }
 
         outputView.printMessage(
-            "결제 금액: ${"%,d".format(result.paidAmount)}원  " +
-                "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
+            "결제 금액: ${"%,d".format(result.paidAmount.amount)}원  " +
+                    "(포인트 ${"%,d".format(result.usedPoint)}원 사용)",
         )
         outputView.printMessage("")
         outputView.printMessage("감사합니다.")
     }
 
-    private fun selectedScreeningReservedSeats(screening: Screening): List<Seat> {
+    private fun selectedScreeningReservedSeats(screening: Screening): Seats {
         val sameScreen =
             repository.screenings.firstOrNull {
                 it.movie == screening.movie && it.startTime == screening.startTime
             } ?: screening
 
-        return allSeats.seats.filter { sameScreen.isReserved(it) }
+        return sameScreen.reservedSeatsFrom(allSeats)
     }
 
     private fun updateScreeningReservation(
         screening: Screening,
-        selectedSeats: List<Seat>,
+        selectedSeats: Seats,
     ) {
         repository.updateScreening(
             repository.screenings.map {
                 if (it.movie == screening.movie && it.startTime == screening.startTime) {
-                    it.reserve(selectedSeats)
+                    it.reserve(selectedSeats.values)
                 } else {
                     it
                 }

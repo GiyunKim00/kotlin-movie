@@ -2,10 +2,11 @@ package movie.domain.payment
 
 import movie.domain.account.Account
 import movie.domain.reservation.Cart
+import kotlin.collections.fold
 
 class Payment(
-    val cart: Cart,
-    private val paymentPolicy: List<PaymentPolicy>,
+    private val cart: Cart,
+    private val discountPolicy: DiscountPolicy,
 ) {
     fun pay(
         pointAmount: Int = 0,
@@ -13,37 +14,52 @@ class Payment(
         selectedPaymentMethod: PaymentMethod,
     ): PayResult =
         runCatching {
-            val initialContext =
-                PaymentContext(
-                    cart = cart,
-                    account = account,
-                    selectedPaymentMethod = selectedPaymentMethod,
-                    requestedPoint = pointAmount,
-                    amount = Money(0),
-                )
+            val discountedAmount = discountedTotalAmount()
+            validatePointUsage(discountedAmount, pointAmount, account)
 
-            val result =
-                paymentPolicy.fold(initialContext) { context, policy ->
-                    policy.apply(context)
-                }
+            val amountAfterPoint = discountedAmount - Money(pointAmount)
+            val paidAmount = selectedPaymentMethod.calculateDiscount(amountAfterPoint)
+
+            account.useMyPoint(pointAmount)
 
             PayResult.Success(
-                cart = result.cart,
-                paidAmount = result.amount.amount,
-                usedPoint = result.usedPoint,
-                paymentMethod = result.selectedPaymentMethod,
+                cart = cart,
+                paidAmount = paidAmount,
+                usedPoint = pointAmount,
+                paymentMethod = selectedPaymentMethod,
             )
         }.getOrElse { exception ->
             PayResult.Failure(
                 message = exception.message ?: "결제에 실패했습니다.",
             )
         }
+
+    fun discountedTotalAmount(): Money =
+        cart.reservedScreens.fold(Money(0)) { totalAmount, reserved ->
+            totalAmount.plus(
+                discountPolicy.discount(
+                    reserved.screen.startTime,
+                    reserved.price(),
+                ),
+            )
+        }
+
+    private fun validatePointUsage(
+        discountedAmount: Money,
+        pointAmount: Int,
+        account: Account,
+    ) {
+        require(discountedAmount.amount >= pointAmount) {
+            "포인트 사용액수는 구매금액을 초과할 수 없습니다."
+        }
+        account.validateUsablePoint(pointAmount)
+    }
 }
 
 sealed interface PayResult {
     data class Success(
         val cart: Cart,
-        val paidAmount: Int,
+        val paidAmount: Money,
         val usedPoint: Int,
         val paymentMethod: PaymentMethod,
     ) : PayResult

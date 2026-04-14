@@ -60,8 +60,8 @@
 - [x] Account 도메인 검증 로직 추가
 - [x] Money 포장
 - [x] DiscountPolicy 관련 유연성 추가 / OCP
-- [ ] 과도한 정책화 개선
-- [ ] Seats 개선
-- [ ] seatNumber 로직 개선
+- [x] 과도한 정책화 개선
+- [x] Seats 개선
+- [x] seatNumber 로직 개선
 - [ ] Movie Title 및 RunningTime 규칙 추가
 - [ ] 사용하지 않는 매서드 제거

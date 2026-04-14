@@ -7,5 +7,5 @@ class ReservedScreen(
     val screen: Screening,
     val seats: Seats,
 ) {
-    fun price(): Money = Money(seats.seats.sumOf { it.grade.money })
+    fun price(): Money = Money(seats.totalPrice())
 }

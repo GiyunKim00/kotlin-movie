@@ -1,11 +1,13 @@
 package movie.domain.reservation
 
+import movie.domain.payment.Money
+
 enum class SeatGrade(
-    val money: Int,
+    val money: Money,
 ) {
-    S(money = 18_000),
-    A(money = 15_000),
-    B(money = 12_000),
+    S(money = Money(18_000)),
+    A(money = Money(15_000)),
+    B(money = Money(12_000)),
     ;
 
     companion object {

@@ -2,7 +2,6 @@ package movie.view
 
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
-import movie.domain.reservation.Seat
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import java.time.format.DateTimeFormatter
@@ -23,43 +22,36 @@ class OutputView {
 
     fun printSeatLayout(
         allSeats: Seats,
-        reservedSeats: List<Seat>,
+        reservedSeats: Seats,
     ) {
         println("좌석 배치도")
         println("    1    2    3    4")
 
-        val grouped = allSeats.seats.groupBy { it.row.value }
-        grouped.forEach { (row, seats) ->
+        allSeats.groupByRow().forEach { (row, seatsInRow) ->
             val seatText =
-                seats.joinToString(" ") { seat ->
-                    if (reservedSeats.contains(seat)) {
-                        "[ X]"
-                    } else {
-                        "[ ${seat.grade.name}]"
-                    }
+                seatsInRow.values.joinToString(" ") { seat ->
+                    if (reservedSeats.contains(seat)) "[ X]" else "[ ${seat.grade.name}]"
                 }
-            println("$row $seatText")
+            println("${row.value} $seatText")
         }
     }
 
     fun printCartAdded(item: ReservedScreen) {
-        val seats = item.seats.seats.joinToString(", ") { it.seatNumber }
         println("장바구니에 추가됨")
         println(
-            "- [${item.screen.movie.title.value}] ${
-                item.screen.startTime.value.format(dateTimeFormatter)
-            }  좌석: $seats",
+            "- [${item.screen.movie.title.value}] " +
+                    "${item.screen.startTime.value.format(dateTimeFormatter)}  " +
+                    "좌석: ${item.seats.toDisplayText()}",
         )
     }
 
     fun printCart(cart: Cart) {
         println("장바구니")
         cart.reservedScreens.forEach {
-            val seats = it.seats.seats.joinToString(", ") { seat -> seat.seatNumber }
             println(
-                "- [${it.screen.movie.title.value}] ${
-                    it.screen.startTime.value.format(dateTimeFormatter)
-                }  좌석: $seats",
+                "- [${it.screen.movie.title.value}] " +
+                        "${it.screen.startTime.value.format(dateTimeFormatter)}  " +
+                        "좌석: ${it.seats.toDisplayText()}",
             )
         }
     }

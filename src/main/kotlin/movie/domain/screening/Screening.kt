@@ -1,6 +1,7 @@
 package movie.domain.screening
 
 import movie.domain.reservation.Seat
+import movie.domain.reservation.Seats
 import java.time.LocalDateTime
 
 class Screening(
@@ -18,6 +19,10 @@ class Screening(
             reservedSeats = reservedSeats + seats,
         )
     }
+
+    fun hasReservedSeat(seats: Seats): Boolean = seats.any { isReserved(it) }
+
+    fun reservedSeatsFrom(seats: Seats): Seats = seats.filter { isReserved(it) }
 
     fun endTime(): LocalDateTime = startTime.value.plusMinutes(movie.runningTime.value.toLong())
 

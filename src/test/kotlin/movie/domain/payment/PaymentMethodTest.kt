@@ -1,11 +1,12 @@
 package movie.domain.payment
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class PaymentMethodTest {
-    private val totalMoney = 10000
+    private val totalMoney = Money(10_000)
 
     @Test
     fun `신용 카드 결제 선택 시 총액 기준 5% 할인된다`() {
@@ -13,16 +14,16 @@ class PaymentMethodTest {
         val creditCardDiscount = PaymentMethod.CREDIT_CARD.calculateDiscount(totalMoney)
 
         // then
-        assertTrue(creditCardDiscount == 9500)
+        assertThat(creditCardDiscount).isEqualTo(Money(9_500))
     }
 
     @Test
     fun `현금 결제 선택 시 총액 기준 2% 할인된다`() {
         // when
-        val creditCardDiscount = PaymentMethod.CASH.calculateDiscount(totalMoney)
+        val cashDiscount = PaymentMethod.CASH.calculateDiscount(totalMoney)
 
         // then
-        assertTrue(creditCardDiscount == 9800)
+        assertThat(cashDiscount).isEqualTo(Money(9_800))
     }
 
     @Test

@@ -16,5 +16,5 @@ enum class PaymentMethod(
             }
     }
 
-    fun calculateDiscount(price: Int): Int = (price * (1 - discountRate)).toInt()
+    fun calculateDiscount(price: Money): Money = price.percent(1 - discountRate)
 }

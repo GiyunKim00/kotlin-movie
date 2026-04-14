@@ -17,6 +17,12 @@ import org.junit.jupiter.api.Test
 class PaymentTest {
     private val emptyCart = Cart()
     private val pointPolicy = PointUsage
+    private val discountPolicy = DiscountPolicy(
+        listOf(
+            MovieDayDiscountMethod,
+            TimeSaleDiscountMethod,
+        ),
+    )
     private val point = Point(2_000)
 
     @Test
@@ -26,8 +32,8 @@ class PaymentTest {
                 cart = emptyCart,
                 paymentPolicy =
                     listOf(
-                        AddAmountPolicy(10_000),
-                        SubtractAmountPolicy(1_000),
+                        AddAmountPolicy(Money(10_000)),
+                        SubtractAmountPolicy(Money(1_000)),
                         PaymentMethodDiscountPolicyStub,
                     ),
             )
@@ -51,7 +57,7 @@ class PaymentTest {
                 cart = emptyCart,
                 paymentPolicy =
                     listOf(
-                        AddAmountPolicy(10_000),
+                        AddAmountPolicy(Money(10_000)),
                         UsePointPolicyStub,
                     ),
             )
@@ -76,7 +82,7 @@ class PaymentTest {
                 cart = emptyCart,
                 paymentPolicy =
                     listOf(
-                        AddAmountPolicy(10_000),
+                        AddAmountPolicy(Money(10_000)),
                         FailPolicy("결제 중 오류가 발생했습니다."),
                     ),
             )
@@ -101,12 +107,12 @@ class PaymentTest {
                 account = Account(point),
                 selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
                 requestedPoint = 2_000,
-                amount = 10_000,
+                amount = Money(10_000)
             )
 
         val result = pointPolicy.apply(context)
 
-        assertThat(result.amount).isEqualTo(8_000)
+        assertThat(result.amount).isEqualTo(Money(8_000))
         assertThat(result.usedPoint).isEqualTo(2_000)
     }
 
@@ -118,12 +124,12 @@ class PaymentTest {
                 account = Account(point),
                 selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
                 requestedPoint = 0,
-                amount = 1_000,
+                amount = Money(1_000)
             )
 
         val result = pointPolicy.apply(context)
 
-        assertThat(result.amount).isEqualTo(1_000)
+        assertThat(result.amount).isEqualTo(Money(1_000))
         assertThat(result.usedPoint).isEqualTo(0)
     }
 
@@ -135,7 +141,7 @@ class PaymentTest {
                 account = Account(Point(5_000)),
                 selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
                 requestedPoint = 3_000,
-                amount = 2_000,
+                amount = Money(2_000)
             )
 
         val exception =
@@ -156,7 +162,7 @@ class PaymentTest {
                 account = Account(point),
                 selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
                 requestedPoint = 3_000,
-                amount = 10_000,
+                amount = Money(10_000)
             )
 
         val exception =
@@ -191,30 +197,32 @@ class PaymentTest {
                 account = Account(),
                 selectedPaymentMethod = PaymentMethod.CREDIT_CARD,
                 requestedPoint = 0,
-                amount = 0,
+                amount = Money(0),
             )
 
-        val result = ScreeningDiscount().apply(context)
+        val result = ScreeningDiscount(discountPolicy).apply(context)
 
-        assertEquals(19_600, result.amount)
+        assertThat(result.amount).isEqualTo(Money(19_600))
     }
 
     private class AddAmountPolicy(
-        private val amountToAdd: Int,
+        private val amountToAdd: Money,
     ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext = context.copy(amount = context.amount + amountToAdd)
+        override fun apply(context: PaymentContext): PaymentContext =
+            context.copy(amount = context.amount + amountToAdd)
     }
 
     private class SubtractAmountPolicy(
-        private val amountToSubtract: Int,
+        private val amountToSubtract: Money,
     ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext = context.copy(amount = context.amount - amountToSubtract)
+        override fun apply(context: PaymentContext): PaymentContext =
+            context.copy(amount = context.amount - amountToSubtract)
     }
 
     private object UsePointPolicyStub : PaymentPolicy {
         override fun apply(context: PaymentContext): PaymentContext =
             context.copy(
-                amount = context.amount - context.requestedPoint,
+                amount = context.amount - Money(context.requestedPoint),
                 usedPoint = context.requestedPoint,
             )
     }
@@ -229,6 +237,7 @@ class PaymentTest {
     private class FailPolicy(
         private val message: String,
     ) : PaymentPolicy {
-        override fun apply(context: PaymentContext): PaymentContext = throw IllegalArgumentException(message)
+        override fun apply(context: PaymentContext): PaymentContext =
+            throw IllegalArgumentException(message)
     }
 }

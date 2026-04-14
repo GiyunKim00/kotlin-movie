@@ -56,10 +56,10 @@
 
 ### 2차 리팩토링
 - [x] @valueSource, @ParameterizedTest 애너테이션을 활용한 for문 기반 테스트 로직 수정
-- [ ] Cart 생성자 주입
+- [x] Cart 생성자 주입
 - [x] Account 도메인 검증 로직 추가
-- [ ] Money 포장
-- [ ] DiscountPolicy 관련 유연성 추가 / OCP
+- [x] Money 포장
+- [x] DiscountPolicy 관련 유연성 추가 / OCP
 - [ ] 과도한 정책화 개선
 - [ ] Seats 개선
 - [ ] seatNumber 로직 개선

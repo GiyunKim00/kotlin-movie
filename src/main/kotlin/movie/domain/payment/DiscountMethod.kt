@@ -5,17 +5,17 @@ import movie.domain.screening.ScreeningStartTime
 interface DiscountMethod {
     fun apply(
         date: ScreeningStartTime,
-        money: Int,
-    ): Int
+        money: Money,
+    ): Money
 }
 
 object MovieDayDiscountMethod : DiscountMethod {
     override fun apply(
         date: ScreeningStartTime,
-        money: Int,
-    ): Int {
+        money: Money,
+    ): Money {
         val day = date.value.dayOfMonth
-        if (day == 10 || day == 20 || day == 30) return (money * 0.9).toInt()
+        if (day == 10 || day == 20 || day == 30) return (money.percent(0.9))
         return money
     }
 }
@@ -23,9 +23,9 @@ object MovieDayDiscountMethod : DiscountMethod {
 object TimeSaleDiscountMethod : DiscountMethod {
     override fun apply(
         date: ScreeningStartTime,
-        money: Int,
-    ): Int {
-        if (date.value.hour !in 11..19) return money - 2000
+        money: Money,
+    ): Money {
+        if (date.value.hour !in 11..19) return money - Money(2000)
         return money
     }
 }

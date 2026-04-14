@@ -8,7 +8,7 @@ data class PaymentContext(
     val account: Account,
     val selectedPaymentMethod: PaymentMethod,
     val requestedPoint: Int,
-    val amount: Int,
+    val amount: Money,
     val usedPoint: Int = 0,
 )
 
@@ -17,12 +17,16 @@ interface PaymentPolicy {
 }
 
 class ScreeningDiscount(
-    private val discountPolicy: DiscountPolicy = DiscountPolicy(),
+    private val discountPolicy: DiscountPolicy,
 ) : PaymentPolicy {
     override fun apply(context: PaymentContext): PaymentContext {
         val discountedAmount =
-            context.cart.reservedScreens.sumOf { reserved ->
-                discountPolicy.discount(reserved.screen.startTime, reserved.price())
+            context.cart.reservedScreens.fold(Money(0)) { totalAmount, reserved ->
+                totalAmount +
+                        discountPolicy.discount(
+                            reserved.screen.startTime,
+                            reserved.price(),
+                        )
             }
 
         return context.copy(amount = discountedAmount)
@@ -32,12 +36,12 @@ class ScreeningDiscount(
 object PointUsage : PaymentPolicy {
     override fun apply(context: PaymentContext): PaymentContext {
         val point = context.requestedPoint
-        require(context.amount >= point) { "포인트 사용액수는 구매금액을 초과할 수 없습니다." }
+        require(context.amount.amount >= point) { "포인트 사용액수는 구매금액을 초과할 수 없습니다." }
 
         context.account.useMyPoint(point)
 
         return context.copy(
-            amount = context.amount - point,
+            amount = Money(context.amount.amount - point),
             usedPoint = point,
         )
     }

@@ -19,7 +19,7 @@ class Payment(
                     account = account,
                     selectedPaymentMethod = selectedPaymentMethod,
                     requestedPoint = pointAmount,
-                    amount = 0,
+                    amount = Money(0),
                 )
 
             val result =
@@ -29,7 +29,7 @@ class Payment(
 
             PayResult.Success(
                 cart = result.cart,
-                paidAmount = result.amount,
+                paidAmount = result.amount.amount,
                 usedPoint = result.usedPoint,
                 paymentMethod = result.selectedPaymentMethod,
             )

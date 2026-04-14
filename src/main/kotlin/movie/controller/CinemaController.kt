@@ -1,12 +1,15 @@
 package movie.controller
 
 import movie.domain.account.Account
+import movie.domain.payment.DiscountPolicy
+import movie.domain.payment.MovieDayDiscountMethod
 import movie.domain.payment.PayResult
 import movie.domain.payment.Payment
 import movie.domain.payment.PaymentMethod
 import movie.domain.payment.PaymentMethodDiscount
 import movie.domain.payment.PointUsage
 import movie.domain.payment.ScreeningDiscount
+import movie.domain.payment.TimeSaleDiscountMethod
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seat
@@ -23,9 +26,8 @@ class CinemaController(
     private val outputView: OutputView,
     private val account: Account = Account(),
     private val allSeats: Seats = Seats.create(),
-) {
     private var cart: Cart = Cart()
-
+) {
     fun run() {
         outputView.printStartMessage()
 
@@ -111,12 +113,19 @@ class CinemaController(
     private fun proceedPayment() {
         outputView.printCart(cart)
 
+        val discountPolicy = DiscountPolicy(
+            listOf(
+                MovieDayDiscountMethod,
+                TimeSaleDiscountMethod,
+            ),
+        )
+
         val payment =
             Payment(
                 cart = cart,
                 paymentPolicy =
                     listOf(
-                        ScreeningDiscount(),
+                        ScreeningDiscount(discountPolicy),
                         PointUsage,
                         PaymentMethodDiscount,
                     ),

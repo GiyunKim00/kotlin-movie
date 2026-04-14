@@ -70,3 +70,4 @@
   - [ ] PaymentService 생성
   - [ ] ReservationService 생성
   - [x] Date 파서 분리
+  - [x] Seat 파서 분리

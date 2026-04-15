@@ -34,7 +34,7 @@ class Payment(
             )
         }
 
-    fun discountedTotalAmount(): Money =
+    private fun discountedTotalAmount(): Money =
         cart.reservedScreens.fold(Money(0)) { totalAmount, reserved ->
             totalAmount.plus(
                 discountPolicy.discount(
@@ -49,7 +49,7 @@ class Payment(
         pointAmount: Int,
         account: Account,
     ) {
-        require(discountedAmount.amount >= pointAmount) {
+        require(discountedAmount >= pointAmount) {
             "포인트 사용액수는 구매금액을 초과할 수 없습니다."
         }
         account.validateUsablePoint(pointAmount)

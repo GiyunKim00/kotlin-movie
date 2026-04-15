@@ -5,9 +5,9 @@ import movie.domain.screening.Screening
 import java.time.LocalDate
 
 class CinemaRepository(
-    var screenings: List<Screening>,
-) {
-    fun findByMovieTitleAndDate(
+    private var screenings: List<Screening>,
+) : ScreeningRepository {
+    override fun findByMovieTitleAndDate(
         title: String,
         date: LocalDate,
     ): List<Screening> =
@@ -16,12 +16,12 @@ class CinemaRepository(
                 it.isSameMovie(title) && it.isSameDate(date)
             }.sortedBy { it.startTime.value }
 
-    fun findSameScreening(screening: Screening): Screening? =
+    override fun findSameScreening(screening: Screening): Screening? =
         screenings.firstOrNull {
             it.isSameScreening(screening)
         }
 
-    fun reserveSeats(
+    override fun reserveSeats(
         screening: Screening,
         selectedSeats: Seats,
     ) {

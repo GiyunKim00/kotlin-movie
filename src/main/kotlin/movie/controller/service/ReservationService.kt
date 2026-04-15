@@ -21,36 +21,10 @@ class ReservationService(
         return screenings
     }
 
-    fun validateScreeningOverlap(
-        cart: Cart,
-        target: Screening,
-    ) {
-        cart.reservedScreens.forEach {
-            require(!it.screen.overlaps(target)) {
-                "선택하신 상영 시간이 겹칩니다. 다른 시간을 선택해 주세요."
-            }
-        }
-    }
-
     fun reservedSeats(screening: Screening): Seats {
-        val sameScreen =
-            repository.screenings.firstOrNull {
-                it.movie == screening.movie && it.startTime == screening.startTime
-            } ?: screening
+        val sameScreen = repository.findSameScreening(screening) ?: screening
 
         return sameScreen.reservedSeatsFrom(allSeats)
-    }
-
-    fun parseSeatNumbers(rawInput: String): List<String> {
-        require(rawInput.isNotBlank()) { "올바른 좌석 번호를 입력해주세요." }
-
-        val seatNumbers = SeatParser.parse(rawInput)
-
-        require(seatNumbers.toSet().size == seatNumbers.size) {
-            "동일 좌석을 중복 예약할 수 없습니다."
-        }
-
-        return seatNumbers
     }
 
     fun reserve(
@@ -67,26 +41,11 @@ class ReservationService(
         val reservedItem = ReservedScreen(screening, selectedSeats)
         val updatedCart = cart.add(reservedItem)
 
-        updateScreeningReservation(screening, selectedSeats)
+        repository.reserveSeats(screening, selectedSeats)
 
         return ReservationResult(
             reservedScreen = reservedItem,
             updatedCart = updatedCart,
-        )
-    }
-
-    private fun updateScreeningReservation(
-        screening: Screening,
-        selectedSeats: Seats,
-    ) {
-        repository.updateScreening(
-            repository.screenings.map {
-                if (it.movie == screening.movie && it.startTime == screening.startTime) {
-                    it.reserve(selectedSeats.values)
-                } else {
-                    it
-                }
-            },
         )
     }
 }

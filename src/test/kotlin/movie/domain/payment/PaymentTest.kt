@@ -17,7 +17,7 @@ class PaymentTest {
         DiscountPolicy(
             listOf(
                 MovieDayDiscountMethod,
-                TimeSaleDiscountMethod,
+                DiscountByTimeMethod,
             ),
         )
 

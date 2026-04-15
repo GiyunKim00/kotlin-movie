@@ -12,7 +12,7 @@ class DiscountPolicyTest {
         DiscountPolicy(
             listOf(
                 MovieDayDiscountMethod,
-                TimeSaleDiscountMethod,
+                DiscountByTimeMethod,
             ),
         )
 

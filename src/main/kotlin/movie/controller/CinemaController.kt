@@ -1,6 +1,7 @@
 package movie.controller
 
 import movie.controller.parser.DateParser
+import movie.controller.parser.SeatParser
 import movie.controller.service.PaymentService
 import movie.controller.service.ReservationService
 import movie.domain.account.Account
@@ -56,7 +57,7 @@ class CinemaController(
 
         val seatNumbers =
             retryPrompt {
-                reservationService.parseSeatNumbers(inputView.readSeatNumbers())
+                parseSeatNumbers(inputView.readSeatNumbers())
             }
 
         val result =
@@ -78,9 +79,20 @@ class CinemaController(
             }
 
             val selectedScreening = availableScreenings[selectedNumber - 1]
-            reservationService.validateScreeningOverlap(cart, selectedScreening)
             selectedScreening
         }
+
+    private fun parseSeatNumbers(rawInput: String): List<String> {
+        require(rawInput.isNotBlank()) { "올바른 좌석 번호를 입력해주세요." }
+
+        val seatNumbers = SeatParser.parse(rawInput)
+
+        require(seatNumbers.toSet().size == seatNumbers.size) {
+            "동일 좌석을 중복 예약할 수 없습니다."
+        }
+
+        return seatNumbers
+    }
 
     private fun proceedPayment() {
         outputView.printCart(cart)

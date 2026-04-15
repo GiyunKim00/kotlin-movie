@@ -77,9 +77,9 @@
 - [x] 가시성 수정
 - [ ] 신설된 도메인 로직에 대한 테스트 코드 작성
 - [x] 할인 금액 음수 방지 및 상수화 적용
-- [ ] 중복 검증 로직 제거 및 Cart로의 책임 일원화
+- [x] 중복 검증 로직 제거 및 Cart로의 책임 일원화
 - [x] 미사용 함수 제거 및 일급 컬렉션 활용
-- [ ] Account / Point 수정
-- [ ] Controller, Services, Repository 개선
-- [ ] 객체 간 책임 분리 강화
+- [x] Account / Point 수정
+- [x] Controller, Services, Repository 개선
+- [x] 객체 간 책임 분리 강화
 - [ ] 결제 정책 작성

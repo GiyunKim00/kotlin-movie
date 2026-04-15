@@ -1,5 +1,6 @@
 package movie.repository
 
+import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import java.time.LocalDate
 
@@ -12,10 +13,22 @@ class CinemaRepository(
     ): List<Screening> =
         screenings
             .filter {
-                it.movie.title.value == title && it.startTime.value.toLocalDate() == date
+                it.isSameMovie(title) && it.isSameDate(date)
             }.sortedBy { it.startTime.value }
 
-    fun updateScreening(updatedScreening: List<Screening>) {
-        screenings = updatedScreening
+    fun findSameScreening(screening: Screening): Screening? =
+        screenings.firstOrNull {
+            it.isSameScreening(screening)
+        }
+
+    fun reserveSeats(
+        screening: Screening,
+        selectedSeats: Seats,
+    ) {
+        screenings.forEach {
+            if (it.isSameScreening(screening)) {
+                it.reserve(selectedSeats)
+            }
+        }
     }
 }

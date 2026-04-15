@@ -3,7 +3,9 @@ package movie.domain.screening
 class Movie(
     val title: MovieTitle,
     val runningTime: RunningTime,
-)
+) {
+    fun isSameTitle(other: String): Boolean = title == MovieTitle(other)
+}
 
 @JvmInline
 value class MovieTitle(

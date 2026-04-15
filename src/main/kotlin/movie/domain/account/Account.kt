@@ -10,6 +10,6 @@ class Account(
 
     fun validateUsablePoint(usingPoints: Int) {
         require(usingPoints >= 0) { "올바른 포인트 사용액수가 아닙니다." }
-        require(point.amount >= usingPoints) { "보유 포인트가 부족합니다." }
+        require(point >= usingPoints) { "보유 포인트가 부족합니다." }
     }
 }

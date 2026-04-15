@@ -19,11 +19,11 @@ class Seats(
 
     fun any(predicate: (Seat) -> Boolean): Boolean = values.any(predicate)
 
-    fun none(predicate: (Seat) -> Boolean): Boolean = values.none(predicate)
-
     fun filter(predicate: (Seat) -> Boolean): Seats = Seats(values.filter(predicate))
 
     fun contains(seat: Seat): Boolean = values.contains(seat)
+
+    operator fun plus(other: Seats): Seats = Seats(values + other.values)
 
     fun groupByRow(): Map<SeatRow, Seats> =
         values

@@ -82,4 +82,3 @@
 - [x] Account / Point 수정
 - [x] Controller, Services, Repository 개선
 - [x] 객체 간 책임 분리 강화
-- [ ] 결제 정책 작성

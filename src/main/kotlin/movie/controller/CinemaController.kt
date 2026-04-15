@@ -79,6 +79,7 @@ class CinemaController(
             }
 
             val selectedScreening = availableScreenings[selectedNumber - 1]
+            cart.validateOverlap(selectedScreening)
             selectedScreening
         }
 

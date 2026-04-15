@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class ReservedScreeingTest {
-    private val seats = listOf(Seat(SeatRow("A"), SeatColumn(1)))
+    private val seats = Seats(listOf(Seat(SeatRow("A"), SeatColumn(1))))
     private val reservedSeats =
         Screening(
             movie =

@@ -17,14 +17,14 @@ class CinemaRepositoryTest {
 
     @Test
     fun `제목과 날짜가 주어지면 해당하는 상영을 찾는다`() {
-        //given & when
+        // given & when
         val resultScreening =
             cinemaRepository.findByMovieTitleAndDate(
                 "어벤져스",
                 LocalDate.of(2026, 4, 10),
             )
 
-        //then
+        // then
         assertEquals(
             ScreeningMockData
                 .screenings()
@@ -45,26 +45,26 @@ class CinemaRepositoryTest {
 
     @Test
     fun `해당하는 상영이 없다면 빈 리스트가 반환된다`() {
-        //given & when
+        // given & when
         val resultScreening =
             cinemaRepository.findByMovieTitleAndDate("어벤져스", LocalDate.of(2026, 4, 15))
 
-        //then
+        // then
         assertEquals(emptyList<Screening>(), resultScreening)
     }
 
     @Test
     fun `상영 좌석을 예매하면 저장소에 반영되어야 한다`() {
-        //given
+        // given
         val screening = ScreeningMockData.screenings().first()
         val selectedSeats = Seats(listOf(Seat(SeatRow("A"), SeatColumn(1))))
         val repository = CinemaRepository(listOf(screening))
 
-        //when
+        // when
         repository.reserveSeats(screening, selectedSeats)
         val updatedScreening = repository.findSameScreening(screening)
 
-        //then
+        // then
         assertThat(updatedScreening?.isReserved(Seat(SeatRow("A"), SeatColumn(1)))).isTrue()
     }
 }

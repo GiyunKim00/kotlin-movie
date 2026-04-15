@@ -14,37 +14,37 @@ class MoneyTest {
 
     @Test
     fun `금액 간 더할 수 있다`() {
-        //given
+        // given
         val result = Money(10_000) + Money(2_000)
 
-        //when & then
+        // when & then
         assertThat(result).isEqualTo(Money(12_000))
     }
 
     @Test
     fun `금액 간 뺄 수 있다`() {
-        //given
+        // given
         val result = Money(10_000) - Money(2_000)
 
-        //when & then
+        // when & then
         assertThat(result).isEqualTo(Money(8_000))
     }
 
     @Test
     fun `금액을 Int로 빼면 차액을 반환한다`() {
-        //given
+        // given
         val result = Money(10_000) - 2_000
 
-        //when & then
+        // when & then
         assertThat(result).isEqualTo(Money(8_000))
     }
 
     @Test
     fun `뺄셈 결과가 음수면 0원을 반환한다`() {
-        //given
+        // given
         val result = Money(1_000) - Money(2_000)
 
-        //when & then
+        // when & then
         assertThat(result).isEqualTo(Money(0))
     }
 

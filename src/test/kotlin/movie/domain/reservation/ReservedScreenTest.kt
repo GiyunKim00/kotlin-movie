@@ -25,13 +25,14 @@ class ReservedScreenTest {
 
     @Test
     fun `선택한 좌석들의 총 가격을 반환한다`() {
-        //given
-        val reservedScreen = ReservedScreen(
-            screen = reservedScreen,
-            seats = seats,
-        )
+        // given
+        val reservedScreen =
+            ReservedScreen(
+                screen = reservedScreen,
+                seats = seats,
+            )
 
-        //when & then
+        // when & then
         assertThat(reservedScreen.price()).isEqualTo(Money(12_000))
     }
 

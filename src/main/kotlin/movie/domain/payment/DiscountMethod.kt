@@ -24,7 +24,6 @@ object MovieDayDiscountMethod : DiscountMethod {
             money
         }
     }
-
 }
 
 object DiscountByTimeMethod : DiscountMethod {
@@ -36,8 +35,9 @@ object DiscountByTimeMethod : DiscountMethod {
         date: ScreeningStartTime,
         money: Money,
     ): Money {
-        if (date.value.hour !in START_HOUR..END_HOUR)
+        if (date.value.hour !in START_HOUR..END_HOUR) {
             return money - Money(TIME_DISCOUNT_AMOUNT)
+        }
         return money
     }
 }

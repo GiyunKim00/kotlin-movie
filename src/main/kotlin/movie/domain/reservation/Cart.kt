@@ -5,9 +5,7 @@ import movie.domain.screening.Screening
 class Cart(
     val reservedScreens: List<ReservedScreen> = emptyList(),
 ) {
-    fun add(reservedScreen: ReservedScreen): Cart {
-        return Cart(reservedScreens + reservedScreen)
-    }
+    fun add(reservedScreen: ReservedScreen): Cart = Cart(reservedScreens + reservedScreen)
 
     fun validateOverlap(screening: Screening) {
         reservedScreens.forEach {

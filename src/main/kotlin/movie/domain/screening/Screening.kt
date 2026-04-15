@@ -18,6 +18,7 @@ class Screening(
             reservedSeats = reservedSeats + seats,
         )
     }
+
     fun isReserved(seat: Seat): Boolean = reservedSeats.contains(seat)
 
     fun hasReservedSeat(seats: Seats): Boolean = seats.any { isReserved(it) }
@@ -29,6 +30,7 @@ class Screening(
     fun isSameMovie(other: String): Boolean = movie.isSameTitle(other)
 
     fun isSameDate(date: LocalDate): Boolean = startTime.value.toLocalDate() == date
+
     fun endTime(): LocalDateTime = startTime.value.plusMinutes(movie.runningTime.value.toLong())
 
     fun overlaps(otherScreen: Screening): Boolean = startTime.value < otherScreen.endTime() && otherScreen.startTime.value < endTime()

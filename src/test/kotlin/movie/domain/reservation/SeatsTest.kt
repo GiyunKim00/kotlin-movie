@@ -32,23 +32,23 @@ class SeatsTest {
 
     @Test
     fun `좌석 번호로 좌석을 찾을 수 있다`() {
-        //given & when
+        // given & when
         val foundSeat = seats.findBySeatNumber("C2")
 
-        //then
+        // then
         assertThat(foundSeat.toDisplayText()).isEqualTo("C2")
     }
 
     @Test
     fun `좌석 목록을 더할 수 있다`() {
-        //given
+        // given
         val seat1 = Seat(SeatRow("A"), SeatColumn(1))
         val seat2 = Seat(SeatRow("B"), SeatColumn(1))
 
-        //when
+        // when
         val result = Seats(listOf(seat1)) + Seats(listOf(seat2))
 
-        //then
+        // then
         assertThat(result.values).containsExactly(seat1, seat2)
     }
 }

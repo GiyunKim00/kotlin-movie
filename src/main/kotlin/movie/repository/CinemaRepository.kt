@@ -25,12 +25,13 @@ class CinemaRepository(
         screening: Screening,
         selectedSeats: Seats,
     ) {
-        screenings = screenings.map {
-            if (it.isSameScreening(screening)) {
-                it.reserve(selectedSeats)
-            } else {
-                it
+        screenings =
+            screenings.map {
+                if (it.isSameScreening(screening)) {
+                    it.reserve(selectedSeats)
+                } else {
+                    it
+                }
             }
-        }
     }
 }

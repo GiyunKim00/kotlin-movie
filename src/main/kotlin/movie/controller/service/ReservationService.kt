@@ -1,6 +1,5 @@
 package movie.controller.service
 
-import movie.controller.parser.SeatParser
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seats

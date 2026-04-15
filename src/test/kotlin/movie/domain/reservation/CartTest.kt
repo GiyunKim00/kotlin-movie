@@ -75,7 +75,7 @@ class CartTest {
         // when & then
         val exception =
             assertThrows(IllegalArgumentException::class.java) {
-                newCart.add(reserved(screening2))
+                newCart.validateOverlap(screening2)
             }
 
         assertEquals(

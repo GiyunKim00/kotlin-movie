@@ -23,10 +23,32 @@ class SeatsTest {
 
     @Test
     fun `좌석이 존재하지 않는다면 IllegalArgumentException을 던진다`() {
-        // given
+        // given & when
         val findingSeats = listOf("A5")
 
-        // when & then
+        // then
         assertThrows<IllegalArgumentException> { seats.findAllBySeatNumbers(findingSeats) }
+    }
+
+    @Test
+    fun `좌석 번호로 좌석을 찾을 수 있다`() {
+        //given & when
+        val foundSeat = seats.findBySeatNumber("C2")
+
+        //then
+        assertThat(foundSeat.toDisplayText()).isEqualTo("C2")
+    }
+
+    @Test
+    fun `좌석 목록을 더할 수 있다`() {
+        //given
+        val seat1 = Seat(SeatRow("A"), SeatColumn(1))
+        val seat2 = Seat(SeatRow("B"), SeatColumn(1))
+
+        //when
+        val result = Seats(listOf(seat1)) + Seats(listOf(seat2))
+
+        //then
+        assertThat(result.values).containsExactly(seat1, seat2)
     }
 }

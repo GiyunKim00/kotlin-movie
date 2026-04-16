@@ -27,6 +27,9 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter", "5.14.3")
     testImplementation("org.assertj", "assertj-core", "3.27.7")
     testImplementation("io.kotest", "kotest-runner-junit5", "6.0.7")
+
+    //DB
+    implementation("com.h2database:h2:2.4.240")
 }
 
 tasks {

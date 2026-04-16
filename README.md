@@ -6,8 +6,8 @@
 - [x] 기존 레포지토리 및 컨트롤러 수정
   - [x] Screening Repository 인터페이스를 사용하도록 수정
   - [x] 좌석 예약 및 결제 시점 분리
-- [ ] Movie, Screening 식별자 부여
-- [ ] JDBC ConnectProvider 작성
+- [x] Movie, Screening 식별자 부여
+- [x] JDBC ConnectProvider 작성
 - [ ] 테이블 생성 SQL문 작성 
 - [ ] DB 생성 및 초기화 로직 작성
 - [ ] 데이터 삽입 SQL문 작성

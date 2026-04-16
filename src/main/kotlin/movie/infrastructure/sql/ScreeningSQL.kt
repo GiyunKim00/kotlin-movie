@@ -19,4 +19,37 @@ object ScreeningSQL {
     const val HAS_MOVIE = """
         select count(*) from movies
     """
+
+    const val FIND_BY_MOVIE_TITLE_AND_DATE = """
+        select
+            s.id as screening_id,
+            s.start_time,
+            m.id as movie_id,
+            m.title,
+            m.running_time
+        from screenings s
+        join movies m on s.movie_id = m.id
+        where m.title = ?
+          and cast(s.start_time as date) = ?
+        order by s.start_time
+    """
+
+    const val FIND_BY_SCREENING_ID = """
+        select
+            s.id as screening_id,
+            s.start_time,
+            m.id as movie_id,
+            m.title,
+            m.running_time
+        from screenings s
+        join movies m on s.movie_id = m.id
+        where s.id = ?
+    """
+
+    const val FIND_RESERVED_SEATS_BY_SCREENING_ID = """
+        select seat_row, seat_column
+        from reserved_seats
+        where screening_id = ?
+        order by seat_row, seat_column
+    """
 }

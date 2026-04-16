@@ -8,7 +8,7 @@
   - [x] 좌석 예약 및 결제 시점 분리
 - [x] Movie, Screening 식별자 부여
 - [x] JDBC ConnectProvider 작성
-- [ ] 테이블 생성 SQL문 작성 
+- [x] 테이블 생성 SQL문 작성 
 - [ ] DB 생성 및 초기화 로직 작성
 - [ ] 데이터 삽입 SQL문 작성
 - [ ] DB 내 데이터 삽입 로직 작성

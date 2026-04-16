@@ -16,6 +16,12 @@
 - [x] DB 데이터 조회 로직 작성
 - [x] DB 데이터 저장 로직 작성
 - [x] DB 로직 테스트 코드 작성
+- [ ] Application 진입점 구성
+- [ ] DB Bean 등록
+- [ ] GET /api/movies 구현
+- [ ] 영화/상영 응답 DTO 구현
+- [ ] POST /api/reservations 구현
+- [ ] 예매 요청/응답 DTO 구현
 
 ## Level 1/2 Production
 ### view

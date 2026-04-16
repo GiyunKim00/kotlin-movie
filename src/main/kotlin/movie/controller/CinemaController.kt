@@ -9,12 +9,12 @@ import movie.domain.payment.PayResult
 import movie.domain.reservation.Cart
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
-import movie.repository.CinemaRepository
+import movie.repository.ScreeningRepository
 import movie.view.InputView
 import movie.view.OutputView
 
 class CinemaController(
-    private val repository: CinemaRepository,
+    private val repository: ScreeningRepository,
     private val inputView: InputView,
     private val outputView: OutputView,
     private val account: Account = Account(),
@@ -51,17 +51,13 @@ class CinemaController(
         val date = DateParser.parse(inputView.readDate())
         val availableScreenings = reservationService.findAvailableScreenings(title, date)
         val selectedScreening = readAvailableScreening(availableScreenings)
-        val reservedSeats = reservationService.reservedSeats(selectedScreening)
-
-        outputView.printSeatLayout(allSeats, reservedSeats)
-
-        val seatNumbers =
-            retryPrompt {
-                parseSeatNumbers(inputView.readSeatNumbers())
-            }
 
         val result =
             retryPrompt {
+                val reservedSeats = reservationService.reservedSeats(selectedScreening)
+                outputView.printSeatLayout(allSeats, reservedSeats)
+
+                val seatNumbers = parseSeatNumbers(inputView.readSeatNumbers())
                 reservationService.reserve(cart, selectedScreening, seatNumbers)
             }
 
@@ -120,11 +116,21 @@ class CinemaController(
 
         val confirm = inputView.readYesOrNo("위 금액으로 결제하시겠습니까? (Y/N)").uppercase()
         if (confirm == "Y") {
+            persistReservations()
             outputView.printReservationHistory(result)
             return
         }
 
         outputView.printMessage("결제가 취소되었습니다.")
+    }
+
+    private fun persistReservations() {
+        cart.reservedScreens.forEach { reservedScreen ->
+            repository.reserveSeats(
+                screening = reservedScreen.screen,
+                selectedSeats = reservedScreen.seats,
+            )
+        }
     }
 
     private fun <T> retryPrompt(action: () -> T): T {

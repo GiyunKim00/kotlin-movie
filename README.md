@@ -3,9 +3,9 @@
 ## 기능 요구사항
 ## Level 3/4 Production
 - [x] Repository 인터페이스 구현
-- [ ] 기존 레포지토리 및 컨트롤러 수정
-  - [ ] Screening Repository 인터페이스를 사용하도록 수정
-  - [ ] 좌석 예약 및 결제 시점 분리
+- [x] 기존 레포지토리 및 컨트롤러 수정
+  - [x] Screening Repository 인터페이스를 사용하도록 수정
+  - [x] 좌석 예약 및 결제 시점 분리
 - [ ] Movie, Screening 식별자 부여
 - [ ] JDBC ConnectProvider 작성
 - [ ] 테이블 생성 SQL문 작성 

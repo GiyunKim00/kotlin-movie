@@ -1,5 +1,6 @@
 package movie.infrastructure.database
 
+import movie.controller.service.MovieScreenings
 import movie.domain.reservation.Seat
 import movie.domain.reservation.SeatColumn
 import movie.domain.reservation.SeatRow
@@ -12,6 +13,7 @@ import movie.domain.screening.ScreeningStartTime
 import movie.infrastructure.sql.ScreeningSQL.FIND_BY_MOVIE_TITLE_AND_DATE
 import movie.infrastructure.sql.ScreeningSQL.FIND_BY_SCREENING_ID
 import movie.infrastructure.sql.ScreeningSQL.FIND_RESERVED_SEATS_BY_SCREENING_ID
+import movie.infrastructure.sql.ScreeningSQL.FIND_SCREENINGS_WITH_MOVIES
 import movie.infrastructure.sql.ScreeningSQL.INSERT_RESERVED_SEAT
 import movie.repository.ScreeningRepository
 import java.sql.Connection
@@ -150,5 +152,44 @@ class JdbcScreeningRepository(
         }
 
         return Seats(seats)
+    }
+
+    override fun findAllMoviesWithScreenings(): List<MovieScreenings> {
+        val movieScreenings = mutableListOf<Pair<Movie, Screening>>()
+
+        connectionProvider.getConnection().use { connection ->
+            connection.prepareStatement(FIND_SCREENINGS_WITH_MOVIES).use { statement ->
+                val resultSet = statement.executeQuery()
+
+                while (resultSet.next()) {
+                    val movie = Movie(
+                        id = resultSet.getLong("movie_id"),
+                        title = MovieTitle(resultSet.getString("title")),
+                        runningTime = RunningTime(resultSet.getInt("running_time")),
+                    )
+
+                    val screeningId = resultSet.getLong("screening_id")
+                    val screening = Screening(
+                        id = screeningId,
+                        movie = movie,
+                        startTime = ScreeningStartTime(
+                            resultSet.getTimestamp("start_time").toLocalDateTime(),
+                        ),
+                        reservedSeats = loadReservedSeats(connection, screeningId),
+                    )
+
+                    movieScreenings += movie to screening
+                }
+            }
+        }
+
+        return movieScreenings
+            .groupBy({ it.first }, { it.second })
+            .map { (movie, screenings) ->
+                MovieScreenings(
+                    movie = movie,
+                    screenings = screenings,
+                )
+            }
     }
 }

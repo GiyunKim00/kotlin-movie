@@ -1,5 +1,6 @@
 package movie.repository
 
+import movie.controller.service.MovieScreenings
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import java.time.LocalDate
@@ -34,4 +35,14 @@ class CinemaRepository(
                 }
             }
     }
+
+    override fun findAllMoviesWithScreenings(): List<MovieScreenings> =
+        screenings
+            .groupBy { it.movie }
+            .map { (movie, screenings) ->
+                MovieScreenings(
+                    movie = movie,
+                    screenings = screenings.sortedBy { it.startTime.value },
+                )
+            }
 }

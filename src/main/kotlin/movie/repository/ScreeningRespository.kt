@@ -1,5 +1,6 @@
 package movie.repository
 
+import movie.controller.service.MovieScreenings
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import java.time.LocalDate
@@ -16,4 +17,6 @@ interface ScreeningRepository {
         screening: Screening,
         selectedSeats: Seats,
     )
+
+    fun findAllMoviesWithScreenings(): List<MovieScreenings>
 }

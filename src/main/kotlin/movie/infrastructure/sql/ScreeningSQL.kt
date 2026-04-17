@@ -1,7 +1,7 @@
 package movie.infrastructure.sql
 
 object ScreeningSQL {
-    const val INSERT_MOVIE  = """
+    const val INSERT_MOVIE = """
         insert into movies(title, running_time)
         values (?, ?)
     """
@@ -51,5 +51,17 @@ object ScreeningSQL {
         from reserved_seats
         where screening_id = ?
         order by seat_row, seat_column
+    """
+
+    const val FIND_SCREENINGS_WITH_MOVIES = """
+        select
+            m.id as movie_id,
+            m.title,
+            m.running_time,
+            s.id as screening_id,
+            s.start_time
+        from movies m
+        join screenings s on s.movie_id = m.id
+        order by m.id, s.start_time
     """
 }

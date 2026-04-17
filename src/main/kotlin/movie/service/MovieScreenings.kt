@@ -1,4 +1,4 @@
-package movie.api.service
+package movie.service
 
 import movie.domain.screening.Movie
 import movie.domain.screening.Screening

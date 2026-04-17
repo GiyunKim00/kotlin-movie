@@ -1,4 +1,4 @@
-package movie.api.service
+package movie.service
 
 import movie.domain.account.Account
 import movie.domain.payment.DiscountByTimeMethod

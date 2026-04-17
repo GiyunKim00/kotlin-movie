@@ -1,6 +1,6 @@
 package movie.repository
 
-import movie.api.service.MovieScreenings
+import movie.service.MovieScreenings
 import movie.domain.reservation.Seat
 import movie.domain.reservation.SeatColumn
 import movie.domain.reservation.SeatRow

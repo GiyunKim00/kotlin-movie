@@ -1,14 +1,14 @@
-package movie.api.service
+package movie.service
 
 import movie.api.dto.ReservationRequest
 import movie.api.dto.ReservationResponse
 import movie.api.dto.ReservedItem
 import movie.domain.account.Account
 import movie.domain.payment.PayResult
-import movie.domain.payment.PaymentMethod
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen
 import movie.domain.reservation.Seats
+import movie.domain.screening.Screening
 import movie.repository.ScreeningRepository
 import movie.view.toDisplayText
 import org.springframework.stereotype.Service
@@ -54,7 +54,7 @@ class ReservationApiService(
             ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
 
     private fun validateNotReserved(
-        screening: movie.domain.screening.Screening,
+        screening: Screening,
         selectedSeats: Seats,
     ) {
         require(!screening.hasReservedSeat(selectedSeats)) {

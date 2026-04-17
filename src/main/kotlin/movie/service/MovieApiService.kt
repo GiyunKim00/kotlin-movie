@@ -1,4 +1,4 @@
-package movie.api.service
+package movie.service
 
 import movie.api.dto.MovieResponse
 import movie.api.dto.MoviesResponse

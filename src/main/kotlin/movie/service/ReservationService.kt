@@ -1,4 +1,4 @@
-package movie.api.service
+package movie.service
 
 import movie.domain.reservation.Cart
 import movie.domain.reservation.ReservedScreen

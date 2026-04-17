@@ -2,8 +2,8 @@ package movie.controller
 
 import movie.controller.parser.DateParser
 import movie.controller.parser.SeatParser
-import movie.api.service.PaymentService
-import movie.api.service.ReservationService
+import movie.service.PaymentService
+import movie.service.ReservationService
 import movie.domain.account.Account
 import movie.domain.payment.PayResult
 import movie.domain.reservation.Cart

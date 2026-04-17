@@ -1,6 +1,6 @@
 package movie.repository
 
-import movie.api.service.MovieScreenings
+import movie.service.MovieScreenings
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
 import java.time.LocalDate

@@ -2,7 +2,7 @@ package movie.api.controller
 
 import movie.api.dto.ReservationRequest
 import movie.api.dto.ReservationResponse
-import movie.api.service.ReservationApiService
+import movie.service.ReservationApiService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

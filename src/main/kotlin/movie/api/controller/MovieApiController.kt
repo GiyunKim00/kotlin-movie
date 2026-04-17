@@ -12,6 +12,5 @@ class MovieApiController(
     private val movieApiService: MovieApiService,
 ) {
     @GetMapping
-    fun getMovies(): MoviesResponse =
-        movieApiService.getMovies()
+    fun getMovies(): MoviesResponse = movieApiService.getMovies()
 }

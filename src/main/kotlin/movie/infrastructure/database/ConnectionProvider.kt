@@ -8,6 +8,5 @@ class ConnectionProvider(
     private val user: String = "sa",
     private val password: String = "",
 ) {
-    fun getConnection(): Connection =
-        DriverManager.getConnection(url, user, password)
+    fun getConnection(): Connection = DriverManager.getConnection(url, user, password)
 }

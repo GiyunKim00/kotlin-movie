@@ -19,6 +19,5 @@ class ReservationApiController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createReservation(
         @RequestBody request: ReservationRequest,
-    ): ReservationResponse =
-        reservationApiService.createReservation(request)
+    ): ReservationResponse = reservationApiService.createReservation(request)
 }

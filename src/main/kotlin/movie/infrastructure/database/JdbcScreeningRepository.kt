@@ -43,20 +43,22 @@ class JdbcScreeningRepository(
                     val runningTime = resultSet.getInt("running_time")
                     val startTime = resultSet.getTimestamp("start_time").toLocalDateTime()
 
-                    val movie = Movie(
-                        id = movieId,
-                        title = MovieTitle(movieTitle),
-                        runningTime = RunningTime(runningTime),
-                    )
+                    val movie =
+                        Movie(
+                            id = movieId,
+                            title = MovieTitle(movieTitle),
+                            runningTime = RunningTime(runningTime),
+                        )
 
                     val reservedSeats = loadReservedSeats(connection, screeningId)
 
-                    screenings += Screening(
-                        id = screeningId,
-                        movie = movie,
-                        startTime = ScreeningStartTime(startTime),
-                        reservedSeats = reservedSeats,
-                    )
+                    screenings +=
+                        Screening(
+                            id = screeningId,
+                            movie = movie,
+                            startTime = ScreeningStartTime(startTime),
+                            reservedSeats = reservedSeats,
+                        )
                 }
             }
         }
@@ -68,8 +70,9 @@ class JdbcScreeningRepository(
         screening: Screening,
         selectedSeats: Seats,
     ) {
-        val existingScreening = findSameScreening(screening)
-            ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
+        val existingScreening =
+            findSameScreening(screening)
+                ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
 
         require(!existingScreening.hasReservedSeat(selectedSeats)) {
             "이미 예약된 좌석은 다시 선택할 수 없습니다."
@@ -113,20 +116,22 @@ class JdbcScreeningRepository(
                     return null
                 }
 
-                val movie = Movie(
-                    id = resultSet.getLong("movie_id"),
-                    title = MovieTitle(resultSet.getString("title")),
-                    runningTime = RunningTime(resultSet.getInt("running_time")),
-                )
+                val movie =
+                    Movie(
+                        id = resultSet.getLong("movie_id"),
+                        title = MovieTitle(resultSet.getString("title")),
+                        runningTime = RunningTime(resultSet.getInt("running_time")),
+                    )
 
                 val reservedSeats = loadReservedSeats(connection, screeningId)
 
                 return Screening(
                     id = resultSet.getLong("screening_id"),
                     movie = movie,
-                    startTime = ScreeningStartTime(
-                        resultSet.getTimestamp("start_time").toLocalDateTime(),
-                    ),
+                    startTime =
+                        ScreeningStartTime(
+                            resultSet.getTimestamp("start_time").toLocalDateTime(),
+                        ),
                     reservedSeats = reservedSeats,
                 )
             }
@@ -144,10 +149,11 @@ class JdbcScreeningRepository(
 
             val resultSet = statement.executeQuery()
             while (resultSet.next()) {
-                seats += Seat(
-                    row = SeatRow(resultSet.getString("seat_row")),
-                    column = SeatColumn(resultSet.getInt("seat_column")),
-                )
+                seats +=
+                    Seat(
+                        row = SeatRow(resultSet.getString("seat_row")),
+                        column = SeatColumn(resultSet.getInt("seat_column")),
+                    )
             }
         }
 
@@ -162,21 +168,24 @@ class JdbcScreeningRepository(
                 val resultSet = statement.executeQuery()
 
                 while (resultSet.next()) {
-                    val movie = Movie(
-                        id = resultSet.getLong("movie_id"),
-                        title = MovieTitle(resultSet.getString("title")),
-                        runningTime = RunningTime(resultSet.getInt("running_time")),
-                    )
+                    val movie =
+                        Movie(
+                            id = resultSet.getLong("movie_id"),
+                            title = MovieTitle(resultSet.getString("title")),
+                            runningTime = RunningTime(resultSet.getInt("running_time")),
+                        )
 
                     val screeningId = resultSet.getLong("screening_id")
-                    val screening = Screening(
-                        id = screeningId,
-                        movie = movie,
-                        startTime = ScreeningStartTime(
-                            resultSet.getTimestamp("start_time").toLocalDateTime(),
-                        ),
-                        reservedSeats = loadReservedSeats(connection, screeningId),
-                    )
+                    val screening =
+                        Screening(
+                            id = screeningId,
+                            movie = movie,
+                            startTime =
+                                ScreeningStartTime(
+                                    resultSet.getTimestamp("start_time").toLocalDateTime(),
+                                ),
+                            reservedSeats = loadReservedSeats(connection, screeningId),
+                        )
 
                     movieScreenings += movie to screening
                 }
@@ -205,14 +214,16 @@ class JdbcScreeningRepository(
 
                 return Screening(
                     id = resultSet.getLong("screening_id"),
-                    movie = Movie(
-                        id = resultSet.getLong("movie_id"),
-                        title = MovieTitle(resultSet.getString("title")),
-                        runningTime = RunningTime(resultSet.getInt("running_time")),
-                    ),
-                    startTime = ScreeningStartTime(
-                        resultSet.getTimestamp("start_time").toLocalDateTime(),
-                    ),
+                    movie =
+                        Movie(
+                            id = resultSet.getLong("movie_id"),
+                            title = MovieTitle(resultSet.getString("title")),
+                            runningTime = RunningTime(resultSet.getInt("running_time")),
+                        ),
+                    startTime =
+                        ScreeningStartTime(
+                            resultSet.getTimestamp("start_time").toLocalDateTime(),
+                        ),
                     reservedSeats = loadReservedSeats(connection, screeningId),
                 )
             }

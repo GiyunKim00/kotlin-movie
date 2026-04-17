@@ -40,19 +40,20 @@ class DataInitializer(
         title: String,
         runningTime: Int,
     ): Long {
-        connection.prepareStatement(
-            INSERT_MOVIE,
-            Statement.RETURN_GENERATED_KEYS,
-        ).use { statement ->
-            statement.setString(1, title)
-            statement.setInt(2, runningTime)
-            statement.executeUpdate()
+        connection
+            .prepareStatement(
+                INSERT_MOVIE,
+                Statement.RETURN_GENERATED_KEYS,
+            ).use { statement ->
+                statement.setString(1, title)
+                statement.setInt(2, runningTime)
+                statement.executeUpdate()
 
-            statement.generatedKeys.use { generatedKeys ->
-                require(generatedKeys.next()) { "movie id 생성에 실패했습니다." }
-                return generatedKeys.getLong(1)
+                statement.generatedKeys.use { generatedKeys ->
+                    require(generatedKeys.next()) { "movie id 생성에 실패했습니다." }
+                    return generatedKeys.getLong(1)
+                }
             }
-        }
     }
 
     private fun insertScreening(

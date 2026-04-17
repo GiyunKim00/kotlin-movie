@@ -11,22 +11,25 @@ class MovieApiService(
     private val screeningRepository: ScreeningRepository,
 ) {
     fun getMovies(): MoviesResponse {
-        val movies = screeningRepository.findAllMoviesWithScreenings()
-            .map { movieScreenings ->
-                val movie = movieScreenings.movie
-                MovieResponse(
-                    id = requireNotNull(movie.id),
-                    title = movie.title.value,
-                    runningTimeMinutes = movie.runningTime.value,
-                    screenings = movieScreenings.screenings.map { screening ->
-                        ScreeningResponse(
-                            id = requireNotNull(screening.id),
-                            startAt = screening.startTime.value,
-                            endAt = screening.endTime(),
-                        )
-                    },
-                )
-            }
+        val movies =
+            screeningRepository
+                .findAllMoviesWithScreenings()
+                .map { movieScreenings ->
+                    val movie = movieScreenings.movie
+                    MovieResponse(
+                        id = requireNotNull(movie.id),
+                        title = movie.title.value,
+                        runningTimeMinutes = movie.runningTime.value,
+                        screenings =
+                            movieScreenings.screenings.map { screening ->
+                                ScreeningResponse(
+                                    id = requireNotNull(screening.id),
+                                    startAt = screening.startTime.value,
+                                    endAt = screening.endTime(),
+                                )
+                            },
+                    )
+                }
 
         return MoviesResponse(movies)
     }

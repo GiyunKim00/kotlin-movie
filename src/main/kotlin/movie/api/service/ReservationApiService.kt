@@ -24,8 +24,9 @@ class ReservationApiService(
         var cart = Cart()
 
         request.reservations.forEach { item ->
-            val screening = screeningRepository.findScreeningById(item.screeningId)
-                ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
+            val screening =
+                screeningRepository.findScreeningById(item.screeningId)
+                    ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
 
             val selectedSeats = allSeats.findAllBySeatNumbers(item.seats)
 
@@ -51,12 +52,13 @@ class ReservationApiService(
 
                 return ReservationResponse(
                     reservationId = 1L,
-                    reservations = result.cart.reservedScreens.map { reserved ->
-                        ReservedItem(
-                            screeningId = requireNotNull(reserved.screen.id),
-                            seats = reserved.seats.values.map { it.toDisplayText() },
-                        )
-                    },
+                    reservations =
+                        result.cart.reservedScreens.map { reserved ->
+                            ReservedItem(
+                                screeningId = requireNotNull(reserved.screen.id),
+                                seats = reserved.seats.values.map { it.toDisplayText() },
+                            )
+                        },
                     usedPoints = result.usedPoint,
                     paymentMethod = result.paymentMethod.name,
                     totalPrice = result.paidAmount.amount,

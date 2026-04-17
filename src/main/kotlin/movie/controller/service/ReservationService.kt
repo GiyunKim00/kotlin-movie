@@ -31,8 +31,9 @@ class ReservationService(
         screening: Screening,
         seatNumbers: List<String>,
     ): ReservationResult {
-        val sameScreen = repository.findSameScreening(screening)
-            ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
+        val sameScreen =
+            repository.findSameScreening(screening)
+                ?: throw IllegalArgumentException("존재하지 않는 상영입니다.")
 
         val selectedSeats = allSeats.findAllBySeatNumbers(seatNumbers)
 

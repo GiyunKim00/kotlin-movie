@@ -15,8 +15,7 @@ open class AppConfig(
     private val dbUrl: String,
 ) {
     @Bean
-    fun connectionProvider(): ConnectionProvider =
-        ConnectionProvider(dbUrl)
+    fun connectionProvider(): ConnectionProvider = ConnectionProvider(dbUrl)
 
     @Bean
     fun databaseInitializer(connectionProvider: ConnectionProvider): DatabaseInitializer {
@@ -39,6 +38,5 @@ open class AppConfig(
     fun screeningRepository(
         connectionProvider: ConnectionProvider,
         dataInitializer: DataInitializer,
-    ): ScreeningRepository =
-        JdbcScreeningRepository(connectionProvider)
+    ): ScreeningRepository = JdbcScreeningRepository(connectionProvider)
 }

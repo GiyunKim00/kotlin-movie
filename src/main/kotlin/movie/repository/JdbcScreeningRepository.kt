@@ -1,6 +1,5 @@
 package movie.repository
 
-import movie.service.MovieScreenings
 import movie.domain.reservation.Seat
 import movie.domain.reservation.SeatColumn
 import movie.domain.reservation.SeatRow
@@ -12,6 +11,7 @@ import movie.domain.screening.Screening
 import movie.domain.screening.ScreeningStartTime
 import movie.infrastructure.database.ConnectionProvider
 import movie.infrastructure.sql.ScreeningSQL
+import movie.service.MovieScreenings
 import java.sql.Connection
 import java.sql.Date
 import java.time.LocalDate
@@ -50,12 +50,12 @@ class JdbcScreeningRepository(
                     val reservedSeats = loadReservedSeats(connection, screeningId)
 
                     screenings +=
-                            Screening(
-                                id = screeningId,
-                                movie = movie,
-                                startTime = ScreeningStartTime(startTime),
-                                reservedSeats = reservedSeats,
-                            )
+                        Screening(
+                            id = screeningId,
+                            movie = movie,
+                            startTime = ScreeningStartTime(startTime),
+                            reservedSeats = reservedSeats,
+                        )
                 }
             }
         }
@@ -147,10 +147,10 @@ class JdbcScreeningRepository(
             val resultSet = statement.executeQuery()
             while (resultSet.next()) {
                 seats +=
-                        Seat(
-                            row = SeatRow(resultSet.getString("seat_row")),
-                            column = SeatColumn(resultSet.getInt("seat_column")),
-                        )
+                    Seat(
+                        row = SeatRow(resultSet.getString("seat_row")),
+                        column = SeatColumn(resultSet.getInt("seat_column")),
+                    )
             }
         }
 

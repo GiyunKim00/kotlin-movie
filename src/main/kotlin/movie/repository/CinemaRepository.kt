@@ -1,8 +1,8 @@
 package movie.repository
 
-import movie.service.MovieScreenings
 import movie.domain.reservation.Seats
 import movie.domain.screening.Screening
+import movie.service.MovieScreenings
 import java.time.LocalDate
 
 class CinemaRepository(

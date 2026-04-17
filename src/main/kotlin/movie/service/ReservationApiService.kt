@@ -23,7 +23,7 @@ class ReservationApiService(
         val paymentMethod = request.paymentMethod
         val payment = createPaymentService()
 
-        return when(val result = payment.pay(cart, request.usedPoints, paymentMethod)) {
+        return when (val result = payment.pay(cart, request.usedPoints, paymentMethod)) {
             is PayResult.Success -> {
                 reserveSeats(result.cart)
                 toReservationResponse(result)

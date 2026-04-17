@@ -192,4 +192,30 @@ class JdbcScreeningRepository(
                 )
             }
     }
+
+    override fun findScreeningById(screeningId: Long): Screening? {
+        connectionProvider.getConnection().use { connection ->
+            connection.prepareStatement(FIND_BY_SCREENING_ID).use { statement ->
+                statement.setLong(1, screeningId)
+                val resultSet = statement.executeQuery()
+
+                if (!resultSet.next()) {
+                    return null
+                }
+
+                return Screening(
+                    id = resultSet.getLong("screening_id"),
+                    movie = Movie(
+                        id = resultSet.getLong("movie_id"),
+                        title = MovieTitle(resultSet.getString("title")),
+                        runningTime = RunningTime(resultSet.getInt("running_time")),
+                    ),
+                    startTime = ScreeningStartTime(
+                        resultSet.getTimestamp("start_time").toLocalDateTime(),
+                    ),
+                    reservedSeats = loadReservedSeats(connection, screeningId),
+                )
+            }
+        }
+    }
 }

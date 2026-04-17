@@ -19,4 +19,6 @@ interface ScreeningRepository {
     )
 
     fun findAllMoviesWithScreenings(): List<MovieScreenings>
+
+    fun findScreeningById(screeningId: Long): Screening?
 }

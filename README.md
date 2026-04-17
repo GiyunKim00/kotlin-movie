@@ -20,8 +20,8 @@
 - [x] DB Bean 등록
 - [x] GET /api/movies 구현
 - [x] 영화/상영 응답 DTO 구현
-- [ ] POST /api/reservations 구현
-- [ ] 예매 요청/응답 DTO 구현
+- [x] POST /api/reservations 구현
+- [x] 예매 요청/응답 DTO 구현
 
 ## Level 1/2 Production
 ### view

@@ -45,4 +45,7 @@ class CinemaRepository(
                     screenings = screenings.sortedBy { it.startTime.value },
                 )
             }
+
+    override fun findScreeningById(screeningId: Long): Screening? =
+        screenings.firstOrNull { it.id == screeningId }
 }

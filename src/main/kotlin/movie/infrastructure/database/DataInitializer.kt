@@ -41,14 +41,17 @@ class DataInitializer(
         runningTime: Int,
     ): Long {
         connection.prepareStatement(
-            INSERT_MOVIE, Statement.RETURN_GENERATED_KEYS,
+            INSERT_MOVIE,
+            Statement.RETURN_GENERATED_KEYS,
         ).use { statement ->
             statement.setString(1, title)
             statement.setInt(2, runningTime)
             statement.executeUpdate()
 
-            val generatedKeys = statement.generatedKeys
-            return generatedKeys.getLong(1)
+            statement.generatedKeys.use { generatedKeys ->
+                require(generatedKeys.next()) { "movie id 생성에 실패했습니다." }
+                return generatedKeys.getLong(1)
+            }
         }
     }
 

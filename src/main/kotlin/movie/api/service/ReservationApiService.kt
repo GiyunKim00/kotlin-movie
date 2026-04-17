@@ -20,7 +20,7 @@ class ReservationApiService(
     fun createReservation(request: ReservationRequest): ReservationResponse {
         val cart = buildCart(request)
 
-        val paymentMethod = parsePaymentMethod(request.paymentMethod)
+        val paymentMethod = request.paymentMethod
         val payment = createPaymentService()
 
         return when(val result = payment.pay(cart, request.usedPoints, paymentMethod)) {
@@ -62,10 +62,6 @@ class ReservationApiService(
         }
     }
 
-    private fun parsePaymentMethod(rawPaymentMethod: String): PaymentMethod =
-        runCatching { PaymentMethod.valueOf(rawPaymentMethod) }
-            .getOrElse { throw IllegalArgumentException("지원하지 않는 결제 수단입니다.") }
-
     private fun createPaymentService(): PaymentService {
         val account = Account()
         return PaymentService(account)
@@ -91,7 +87,7 @@ class ReservationApiService(
                     )
                 },
             usedPoints = result.usedPoint,
-            paymentMethod = result.paymentMethod.name,
+            paymentMethod = result.paymentMethod,
             totalPrice = result.paidAmount.amount,
         )
 }

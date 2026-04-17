@@ -1,6 +1,6 @@
-package movie.infrastructure.database
+package movie.repository
 
-import movie.controller.service.MovieScreenings
+import movie.api.service.MovieScreenings
 import movie.domain.reservation.Seat
 import movie.domain.reservation.SeatColumn
 import movie.domain.reservation.SeatRow
@@ -10,15 +10,12 @@ import movie.domain.screening.MovieTitle
 import movie.domain.screening.RunningTime
 import movie.domain.screening.Screening
 import movie.domain.screening.ScreeningStartTime
-import movie.infrastructure.sql.ScreeningSQL.FIND_BY_MOVIE_TITLE_AND_DATE
-import movie.infrastructure.sql.ScreeningSQL.FIND_BY_SCREENING_ID
-import movie.infrastructure.sql.ScreeningSQL.FIND_RESERVED_SEATS_BY_SCREENING_ID
-import movie.infrastructure.sql.ScreeningSQL.FIND_SCREENINGS_WITH_MOVIES
-import movie.infrastructure.sql.ScreeningSQL.INSERT_RESERVED_SEAT
-import movie.repository.ScreeningRepository
+import movie.infrastructure.database.ConnectionProvider
+import movie.infrastructure.sql.ScreeningSQL
 import java.sql.Connection
 import java.sql.Date
 import java.time.LocalDate
+import kotlin.collections.plusAssign
 
 class JdbcScreeningRepository(
     private val connectionProvider: ConnectionProvider,
@@ -30,7 +27,7 @@ class JdbcScreeningRepository(
         val screenings = mutableListOf<Screening>()
 
         connectionProvider.getConnection().use { connection ->
-            connection.prepareStatement(FIND_BY_MOVIE_TITLE_AND_DATE).use { statement ->
+            connection.prepareStatement(ScreeningSQL.FIND_BY_MOVIE_TITLE_AND_DATE).use { statement ->
                 statement.setString(1, title)
                 statement.setDate(2, Date.valueOf(date))
 
@@ -53,12 +50,12 @@ class JdbcScreeningRepository(
                     val reservedSeats = loadReservedSeats(connection, screeningId)
 
                     screenings +=
-                        Screening(
-                            id = screeningId,
-                            movie = movie,
-                            startTime = ScreeningStartTime(startTime),
-                            reservedSeats = reservedSeats,
-                        )
+                            Screening(
+                                id = screeningId,
+                                movie = movie,
+                                startTime = ScreeningStartTime(startTime),
+                                reservedSeats = reservedSeats,
+                            )
                 }
             }
         }
@@ -84,7 +81,7 @@ class JdbcScreeningRepository(
             connection.autoCommit = false
 
             try {
-                connection.prepareStatement(INSERT_RESERVED_SEAT).use { statement ->
+                connection.prepareStatement(ScreeningSQL.INSERT_RESERVED_SEAT).use { statement ->
                     selectedSeats.values.forEach { seat ->
                         statement.setLong(1, screeningId)
                         statement.setString(2, seat.row.value)
@@ -108,7 +105,7 @@ class JdbcScreeningRepository(
         val screeningId = screening.id ?: return null
 
         connectionProvider.getConnection().use { connection ->
-            connection.prepareStatement(FIND_BY_SCREENING_ID).use { statement ->
+            connection.prepareStatement(ScreeningSQL.FIND_BY_SCREENING_ID).use { statement ->
                 statement.setLong(1, screeningId)
                 val resultSet = statement.executeQuery()
 
@@ -144,16 +141,16 @@ class JdbcScreeningRepository(
     ): Seats {
         val seats = mutableListOf<Seat>()
 
-        connection.prepareStatement(FIND_RESERVED_SEATS_BY_SCREENING_ID).use { statement ->
+        connection.prepareStatement(ScreeningSQL.FIND_RESERVED_SEATS_BY_SCREENING_ID).use { statement ->
             statement.setLong(1, screeningId)
 
             val resultSet = statement.executeQuery()
             while (resultSet.next()) {
                 seats +=
-                    Seat(
-                        row = SeatRow(resultSet.getString("seat_row")),
-                        column = SeatColumn(resultSet.getInt("seat_column")),
-                    )
+                        Seat(
+                            row = SeatRow(resultSet.getString("seat_row")),
+                            column = SeatColumn(resultSet.getInt("seat_column")),
+                        )
             }
         }
 
@@ -164,7 +161,7 @@ class JdbcScreeningRepository(
         val movieScreenings = mutableListOf<Pair<Movie, Screening>>()
 
         connectionProvider.getConnection().use { connection ->
-            connection.prepareStatement(FIND_SCREENINGS_WITH_MOVIES).use { statement ->
+            connection.prepareStatement(ScreeningSQL.FIND_SCREENINGS_WITH_MOVIES).use { statement ->
                 val resultSet = statement.executeQuery()
 
                 while (resultSet.next()) {
@@ -204,7 +201,7 @@ class JdbcScreeningRepository(
 
     override fun findScreeningById(screeningId: Long): Screening? {
         connectionProvider.getConnection().use { connection ->
-            connection.prepareStatement(FIND_BY_SCREENING_ID).use { statement ->
+            connection.prepareStatement(ScreeningSQL.FIND_BY_SCREENING_ID).use { statement ->
                 statement.setLong(1, screeningId)
                 val resultSet = statement.executeQuery()
 

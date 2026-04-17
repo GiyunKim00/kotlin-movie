@@ -6,7 +6,7 @@ import movie.domain.reservation.SeatRow
 import movie.infrastructure.database.ConnectionProvider
 import movie.infrastructure.database.DataInitializer
 import movie.infrastructure.database.DatabaseInitializer
-import movie.infrastructure.database.JdbcScreeningRepository
+import movie.repository.JdbcScreeningRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import java.time.LocalDate

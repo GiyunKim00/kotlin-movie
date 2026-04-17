@@ -4,7 +4,7 @@ import movie.controller.CinemaController
 import movie.infrastructure.database.ConnectionProvider
 import movie.infrastructure.database.DataInitializer
 import movie.infrastructure.database.DatabaseInitializer
-import movie.infrastructure.database.JdbcScreeningRepository
+import movie.repository.JdbcScreeningRepository
 import movie.repository.ScreeningRepository
 import movie.view.InputView
 import movie.view.OutputView

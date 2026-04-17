@@ -1,4 +1,4 @@
-package movie.controller.service
+package movie.api.service
 
 import movie.domain.account.Account
 import movie.domain.payment.DiscountByTimeMethod
@@ -19,7 +19,7 @@ class PaymentService(
         return inputPoint
     }
 
-    fun validatePaymentMethod(input: Int): PaymentMethod = PaymentMethod.validate(input)
+    fun validatePaymentMethod(input: Int): PaymentMethod = PaymentMethod.Companion.validate(input)
 
     fun pay(
         cart: Cart,

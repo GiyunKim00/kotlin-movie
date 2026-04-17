@@ -37,7 +37,7 @@ class DataInitializerTest {
                 val screeningCount = screeningCountResult.getInt(1)
 
                 assertThat(movieCount).isEqualTo(3)
-                assertThat(screeningCount).isEqualTo(4)
+                assertThat(screeningCount).isEqualTo(6)
             }
         }
     }
@@ -58,7 +58,7 @@ class DataInitializerTest {
                 val screeningCount = screeningCountResult.getInt(1)
 
                 assertThat(movieCount).isEqualTo(3)
-                assertThat(screeningCount).isEqualTo(4)
+                assertThat(screeningCount).isEqualTo(6)
             }
         }
     }
